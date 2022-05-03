@@ -1,0 +1,54 @@
+{% extends "layout.twig" %}
+
+{% block title %} Detalles de canción {% endblock %}
+
+{% block main_container %}
+    <div class="row">
+        <div class="media col-xs-11">
+            <div class="media-left media-middle">
+                <img class="media-object" src="/covers/{{ song._id }}.png" alt="cover">
+            </div>
+            <div class="media-body">
+                <h2>{{ song.title }}</h2>
+                <p>{{ song.author }}</p>
+                <p>{{ song.kind }}</p>
+                {% if song.author == user.user%}
+                    <audio controls>
+                        <source src="/audios/{{ song._id }}.mp3" type="audio/mpeg">
+                    </audio>
+                {% endif %}
+                {% if song.author != user.user %}
+                    <a class="btn btn-primary pull-right"
+                       href="/songs/buy/{{ song._id }}">{{ song.price }}€ - {{ song.usd }}$</a>
+                {% endif %}
+                <!-- Cambiar el precio por "reproducir" si ya está comprada -->
+            </div>
+        </div>
+    </div>
+    <br>
+    <form class="form-horizontal" method="post" action="/comments/{{ song._id }}">
+        <div class="form-group">
+            <label class="control-label col-sm-1" for="text">Texto:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="text" name="text"
+                       placeholder="Escribe aquí tu comentario..."/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-1 col-sm-10">
+                <button type="submit" class="btn btn-primary">Agregar</button>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        {% for comment in comments %}
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+                <div style="width:200px">
+                    <div>{{ comment.text }} </div>
+                    <div class="small">{{ comment.author }} </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
