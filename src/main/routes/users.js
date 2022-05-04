@@ -8,10 +8,20 @@ module.exports = function (app, usersRepository) {
     });
 
     app.post('/users/signup', function (req, res) {
+        let passwd = req.body.password;
+        let passwd2 = req.body.password2;
+        if(passwd !== passwd2){
+            res.redirect("/users/signup" +
+                "?message=Las constraseñas no coinciden"+
+                "&messageType=alert-danger");
+        }
         let securePassword = app.get("crypto").createHmac('sha256', app.get('clave'))
             .update(req.body.password).digest('hex');
         let user = {
             email: req.body.email,
+            nombre: req.body.name,
+            apellidos: req.body.apellidos,
+            admin: false,
             password: securePassword
         }
         usersRepository.insertUser(user).then(userId => {
@@ -46,13 +56,16 @@ module.exports = function (app, usersRepository) {
                     "&messageType=alert-danger ");
             } else {
                 req.session.user = user.email;
-                res.redirect("/publications");
+                if(user.admin){
+                    res.redirect("/users/all");
+                } else {
+                    res.redirect("/users/list");
+                }
             }
         }).catch(error => {
             req.session.user = null;
-            //res.send("Se ha producido un error al buscar el usuario: " + error);
             res.redirect("/users/login" +
-                "?message=Se ha producido un error al buscar el usuario"+
+                "?message=Se ha producido un error al encontrar el usuario"+
                 "&messageType=alert-danger ");
         });
     });

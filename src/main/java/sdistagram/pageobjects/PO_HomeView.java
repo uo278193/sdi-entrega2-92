@@ -1,4 +1,4 @@
-package notaneitor.pageobjects;
+package sdistagram.pageobjects;
 
 import com.uniovi.notaneitor.util.SeleniumUtils;
 import org.openqa.selenium.WebDriver;
@@ -10,7 +10,8 @@ public class PO_HomeView extends PO_NavView {
 
     static public void checkWelcomeToPage(WebDriver driver, int language) {
         //Esperamos a que se cargue el saludo de bienvenida en Español
-        SeleniumUtils.waitLoadElementsBy(driver, "text", p.getString("welcome.message", language), getTimeout());
+        SeleniumUtils.waitLoadElementsBy(driver, "text", p.getString("welcome.message", language),
+                getTimeout());
     }
 
     static public List<WebElement> getWelcomeMessageText(WebDriver driver, int language) {
@@ -30,6 +31,4 @@ public class PO_HomeView extends PO_NavView {
         //Esperamos a que se cargue el saludo de bienvenida en Español
         PO_HomeView.checkWelcomeToPage(driver, locale1);
     }
-
-
 }

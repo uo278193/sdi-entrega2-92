@@ -1,4 +1,4 @@
-package notaneitor.util;
+package sdistagram.util;
 
 
 import org.junit.jupiter.api.Assertions;
@@ -66,14 +66,14 @@ public class SeleniumUtils {
 	}
 
 	/**
-	 *sta de eleme Espera por la visibilidad de un elemento/s en la vista actualmente cargandose en driver. Para ello se empleará una consulta xpath
-	 * 	 * según varios criterios..
-	 * 	 *
-	 * 	 * @param driver: apuntando al navegador abierto actualmente.
-	 * 	 * @param criterio: "id" or "class" or "text" or "@attribute" or "free". Si el valor de criterio es free es una expresion xpath completa.
-	 * 	 * @param text: texto correspondiente al criterio.
-	 * 	 * @param timeout: el tiempo máximo que se esperará por la apareción del elemento a buscar con criterio/text.
-	 * 	 * @return Se retornará la lintos resultantes de la búsqueda.
+	 * Espera por la visibilidad de un elemento/s en la vista actualmente cargandose en driver. Para ello se empleará una consulta xpath 
+	 * según varios criterios..
+	 * 
+	 * @param driver: apuntando al navegador abierto actualmente.
+	 * @param criterio: "id" or "class" or "text" or "@attribute" or "free". Si el valor de criterio es free es una expresion xpath completa. 
+	 * @param text: texto correspondiente al criterio.
+	 * @param timeout: el tiempo máximo que se esperará por la apareción del elemento a buscar con criterio/text.
+	 * @return Se retornará la lista de elementos resultantes de la búsqueda.
 	 */
 	static public List<WebElement> waitLoadElementsBy(WebDriver driver, String criterio, String text, int timeout)
 	{
