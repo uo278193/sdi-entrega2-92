@@ -31,7 +31,7 @@ class SdistagramApplicationTests {
 
     // Común a Windows y a MACOSX
     static WebDriver driver = getDriver(PathFirefox, Geckodriver);
-    static String URL = "http://localhost:8090";
+    static String URL = "http://localhost:8081";
 
     public static WebDriver getDriver(String PathFirefox, String Geckodriver) {
         System.setProperty("webdriver.firefox.bin", PathFirefox);
