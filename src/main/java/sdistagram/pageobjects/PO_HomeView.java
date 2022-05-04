@@ -1,8 +1,8 @@
 package sdistagram.pageobjects;
 
-import com.uniovi.notaneitor.util.SeleniumUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import sdistagram.util.SeleniumUtils;
 
 import java.util.List;
 
