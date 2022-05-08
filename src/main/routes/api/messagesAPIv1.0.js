@@ -24,7 +24,7 @@ module.exports = function (app, usersRepository, messagesRepository) {
         }
     });
 
-    app.get("/api/v1.0/sdigram/friends", function (req, res) {
+    app.get("/api/v1.0/user/friends", function (req, res) {
         try {
             let email = res.user.email;
             let filter = {email: email};
