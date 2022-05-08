@@ -1,6 +1,10 @@
 module.exports = function (app, usersRepository) {
-    app.get('/users', function (req, res) {
-        res.send('lista de usuarios');
+    app.get('/users/list', function (req, res) {
+
+
+
+       let response = {users: users, pages: pages, currentPage: page}
+       res.render("users/list.twig", response);
     });
 
     app.get('/users/signup', function (req, res) {
