@@ -59,7 +59,7 @@ app.use("/messages/edit", userAuthorRouter);
 app.use("/messages/delete", userAuthorRouter);
 
 const userTokenRouter = require('./routes/userTokenRouter'); // habrá que cambiarlo
-app.use("/api/v1.0/messages/", userTokenRouter);
+app.use("/api/v1.0/sdigram/", userTokenRouter);
 
 const userAudiosRouter = require('./routes/userAudiosRouter');
 
