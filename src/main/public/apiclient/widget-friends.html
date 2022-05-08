@@ -49,5 +49,12 @@
         }
     }
 
+    $('#filter-by-name').on('input', function (e) {
+        let filteredFriends = [];
+        let filterValue = $("#filter-by-name").val();
+        filteredFriends = friends.filter(friend => friend.nombre.includes(filterValue));
+        updateFriendsTable(filteredFriends);
+    });
+
     loadFriends();
 </script>
