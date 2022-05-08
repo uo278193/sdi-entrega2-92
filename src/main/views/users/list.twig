@@ -21,11 +21,11 @@
                     <td scope="row">{{ user.nombre }}</td>
                     <td scope="row">{{ user.apellidos }}</td>
 
-                    <!--  <td scope="row" th:if="${!user.getFriendRequestReceived().contains(activeUser)&&!user.getFriends().contains(activeUser)}">
-                       <form th:action="${'/user/sendFriendRequest/' + user.id}" method="post">
-                           <input type="submit" class="btn btn-primary btnSendFR" value="Send Friend Request" >
+                    <td scope="row">
+                       <form action={{'/user/sendFriendRequest/'~user._id}} method="post">
+                           <input type="submit" class="btn btn-primary btnSendFR" value="Enviar petición de amistad" >
                        </form>
-                   </td> -->
+                   </td>
                </tr>
                {% endfor %}
                </tbody>
