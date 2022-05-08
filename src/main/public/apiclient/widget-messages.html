@@ -1,0 +1,79 @@
+<div id="widget-messages">
+    <input type="text" class="form-control" placeholder="Filtrar por nombre" id="filter-by-name"/>
+    <button class="btn" onclick="loadMessages()">Actualizar</button>
+</div>
+<script>
+    window.history.pushState("", "", "/apiclient/client.html?w=messages");
+    var messages;
+    var selectedMessageId;
+
+    function loadMessages() {
+        $.ajax({
+            url: URLbase + "/messages",
+            type: "GET",
+            data: {},
+            dataType: 'json',
+            headers: {"token": token},
+            success: function (response) {
+                messages = response.messages;
+                updateMessagesTable(messages);
+            },
+            error: function (error) {
+                $("#main-container").load("widget-login.html");
+            }
+        });
+    }
+
+    function messageDetail(_id) {
+        selectedMessageId = _id;
+        $("#main-container").load("widget-detail.html");
+    }
+
+    function updateMessagesTable(messages) {
+        $("#messagesTableBody").empty(); // Vaciar la tabla
+        for (let i = 0; i < messages.length; i++) {
+            $("#messagesTableBody").append(
+                "<tr id=" + messages[i]._id + ">" +
+                "<td>" + messages[i].title + "</td>" +
+                "<td>" + messages[i].texto + "</td>" +
+                "<td>" + messages[i].fecha + "</td>" +
+                "<td>" +
+                "<a onclick=songDetail('" + messages[i]._id + "')>Detalles</a><br>" +
+                "<a onclick=songDelete('" + messages[i]._id + "')>Eliminar</a>" +
+                "</td>" +
+                "</tr>");
+            // Mucho cuidado con las comillas del eliminarCancion
+            //la id tiene que ir entre comillas ' '
+        }
+    }
+
+    function songDelete(_id) {
+        $.ajax({
+            url: URLbase + "/messages/" + _id,
+            type: "DELETE",
+            data: {},
+            dataType: 'json',
+            headers: {"token": token},
+            success: function (response) {
+                console.log("Canción eliminada: " + _id);
+                $("#" + _id).remove(); // eliminar el <tr> del post
+            },
+            error: function (error) {
+                $("#main-container").load("widget-login.html");
+            }
+        });
+    }
+
+    function widgetAddMessage() {
+        $("#main-container").load("widget-add.html");
+    }
+
+    $('#filter-by-name').on('input', function (e) {
+        let filteredMessages = [];
+        let filterValue = $("#filter-by-name").val();
+        filteredMessages = messages.filter(song => song.title.includes(filterValue));
+        updateMessagesTable(filteredMessages);
+    });
+
+    loadMessages();
+</script>
