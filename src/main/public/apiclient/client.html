@@ -23,7 +23,7 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav" id="barra-menu">
-                <li><a onclick=widgetPosts()>Posts</a></li>
+                <li><a onclick=widgetFriends()>Amigos</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right" id="barra-menu-derecha">
                 <!-- Opciones de menú aqui -->
@@ -40,7 +40,7 @@
 
     if (Cookies.get('token') != null) {
         token = Cookies.get('token');
-        $("#main-container").load("widget-posts.html");
+        $("#main-container").load("widget-login.html");
         let url = new URL(window.location.href);
         let w = url.searchParams.get("w");
         if (w == "login") {
@@ -50,11 +50,11 @@
             $("#main-container").load("widget-posts.html");
         }
     } else {
-        $("#main-container").load("widget-login.html");
+        $("#main-container").load("widget-friends.html");
     }
 
-    function widgetPosts() {
-        $("#main-container").load("widget-posts.html");
+    function widgetFriends() {
+        $("#main-container").load("widget-friends.html");
     }
 </script>
 </body>
