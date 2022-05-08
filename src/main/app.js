@@ -57,6 +57,7 @@ const userSessionRouter = require('./routes/userSessionRouter');
 const userAuthorRouter = require('./routes/userAuthorRouter');
 app.use("/posts/edit", userAuthorRouter);
 app.use("/posts/delete", userAuthorRouter);
+app.use("/users/list",userSessionRouter);
 
 const userTokenRouter = require('./routes/userTokenRouter'); // habrá que cambiarlo
 app.use("/api/v1.0/posts/", userTokenRouter);
