@@ -2,6 +2,17 @@ module.exports = function (app, usersRepository) {
     app.get('/users/list', function (req, res) {
         let filter = {"admin": false,"email":{$ne:req.session.user}};
         let options = {};
+        if (req.query.search != null && (req.query.search) !== "undefined" && req.query.search !== "") {
+            filter = {
+                "admin": false,
+                "email":{$ne:req.session.user},
+                $or:[
+                    {"email":{$regex: ".*" + req.query.search + ".*"}},
+                    {"nombre":{$regex: ".*" + req.query.search + ".*"}},
+                    {"apellidos":{$regex: ".*" + req.query.search + ".*"}}
+                ]};
+        }
+        console.log(filter);
         let page = parseInt(req.query.page); // Es String !!!
         if (typeof req.query.page === "undefined" || req.query.page === null || req.query.page === "0") {
             //Puede no venir el param
