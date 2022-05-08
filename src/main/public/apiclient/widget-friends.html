@@ -1,0 +1,53 @@
+<div id="widget-friends">
+    <input type="text" class="form-control" placeholder="Filtrar por nombre" id="filter-by-name"/>
+    <button class="btn" onclick="loadFriends()">Actualizar</button>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th class="col-md-1"></th>
+        </tr>
+        </thead>
+        <tbody id="friendsTableBody"></tbody>
+    </table>
+</div>
+<script>
+    window.history.pushState("", "", "/apiclient/client.html?w=friends");
+    var friends;
+
+    function loadFriends() {
+        $.ajax({
+            url: URLbase + "/user/friends",
+            type: "GET",
+            data: {},
+            dataType: 'json',
+            headers: {"token": token},
+            success: function (response) {
+                friends = response.friends;
+                updateFriendsTable(friends);
+            },
+            error: function (error) {
+                $("#main-container").load("widget-login.html");
+            }
+        });
+        // ordenar alfabéticamente (de menor a mayor)
+        friends.sort(function (a, b) {
+            if (a.nombre > b.nombre) return 1;
+            if (a.nombre < b.nombre) return -1;
+            return 0;
+        });
+        updateFriendsTable(friends);
+    }
+
+    function updateFriendsTable(friends) {
+        $("#friendsTableBody").empty(); // Vaciar la tabla
+        for (let i = 0; i < friends.length; i++) {
+            $("#friendsTableBody").append(
+                "<tr id=" + friends[i].nombre + ">" +
+                "<td>" + friends[i].apellidos + "</td>" +
+                "<td>" +
+                "</tr>");
+        }
+    }
+
+    loadFriends();
+</script>

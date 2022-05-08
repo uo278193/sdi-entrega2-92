@@ -81,7 +81,7 @@ require("./routes/comments.js")(app, commentsRepository);
 //require("./routes/posts.js")(app, postsRepository, commentsRepository);
 require("./routes/authors.js")(app);
 // cambiar
-require("./routes/api/songsAPIv1.0.js")(app, postsRepository, usersRepository);
+require("./routes/api/postsAPIv1.0.js")(app, postsRepository, usersRepository);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
