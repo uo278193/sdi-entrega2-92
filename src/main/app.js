@@ -48,7 +48,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 const {MongoClient} = require("mongodb");
-const url = "mongodb+srv://admin:admin@sdi-entrega2.hn9hw.mongodb.net/sdi-entrega2?retryWrites=true&w=majority";
+const url = "mongodb+srv://admin:admin@sdi-entrega2-92.qguw0.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 app.set('connectionStrings', url);
 
