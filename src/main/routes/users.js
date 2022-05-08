@@ -19,7 +19,7 @@ module.exports = function (app, usersRepository) {
             .update(req.body.password).digest('hex');
         let user = {
             email: req.body.email,
-            nombre: req.body.name,
+            nombre: req.body.nombre,
             apellidos: req.body.apellidos,
             admin: false,
             password: securePassword
