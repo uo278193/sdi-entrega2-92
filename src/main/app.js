@@ -55,6 +55,9 @@ app.set('connectionStrings', url);
 // Antes de los controladores de /users y /songs
 const userSessionRouter = require('./routes/userSessionRouter');
 const userAuthorRouter = require('./routes/userAuthorRouter');
+app.use("/posts/edit", userAuthorRouter);
+app.use("/posts/delete", userAuthorRouter);
+app.use("/users/list",userSessionRouter);
 app.use("/messages/edit", userAuthorRouter);
 app.use("/messages/delete", userAuthorRouter);
 
