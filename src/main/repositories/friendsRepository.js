@@ -5,27 +5,22 @@ module.exports = {
         this.mongoClient = mongoClient;
         this.app = app;
     },
-    addFriend: async function(user, email){
+    //DONE
+    addFriend: async function(friendship){
         try {
             const client = await this.mongoClient.connect(this.app.get('connectionStrings'));
             const database = client.db("sdistagram");
             const collectionName = 'friends';
             const friendsCollection = database.collection(collectionName);
-            const result = await friendsCollection.insertOne(user);
+            const result = await friendsCollection.insertOne(friendship);
             return result.insertedId;
         } catch (error) {
             throw (error);
         }
     },
-    sendFriendRequest: async function(user,email){
-
-    },
-    getFriendRequest: async function(user){
-
-    },
     getFriends: async function (filter, options,page) {
         try {
-            const limit = 4;
+            const limit = 5;
             const client = await this.mongoClient.connect(this.app.get('connectionStrings'));
             const database = client.db("musicStore");
             const collectionName = 'friends';
@@ -38,59 +33,35 @@ module.exports = {
         } catch (error) {
             throw (error);
         }
-    }
-
-
-
-
-    ,addFriend: async function (user) {
-        try {
-            const client = await this.mongoClient.connect(this.app.get('connectionStrings'));
-            const database = client.db("sdistagram");
-            const collectionName = 'friends';
-            const friendsCollection = database.collection(collectionName);
-            const result = await friendsCollection.insertOne(user);
-            return result.insertedId;
-        } catch (error) {
-            throw (error);
-        }
-    }, getFriendRequests: async function (filter, options) {
-        try {
-            const client = await this.mongoClient.connect(this.app.get('connectionStrings'));
-            const database = client.db("sdistagram");
-            const collectionName = 'friends';
-            const friendsCollection = database.collection(collectionName);
-            return await friendsCollection.findOne(filter, options);
-        } catch (error) {
-            throw (error);
-        }
     },
-    getFriends: async function (filter, options,page) {
+    //DONE
+    deleteFriendRequest: async function(filter){
         try {
-            const limit = 4;
             const client = await this.mongoClient.connect(this.app.get('connectionStrings'));
-            const database = client.db("musicStore");
-            const collectionName = 'songs';
-            const songsCollection = database.collection(collectionName);
-            const songsCollectionCount = await songsCollection.count();
-            const cursor = songsCollection.find(filter, options).skip((page - 1) * limit).limit(limit)
-            const songs = await cursor.toArray();
-            const result = {songs: songs, total: songsCollectionCount};
+            const database = client.db("sdistagram");
+            const collectionName = 'friendRequest';
+            const friendRequestCollection = database.collection(collectionName);
+            const result = await friendRequestCollection.delete(filter);
             return result;
         } catch (error) {
             throw (error);
         }
-
+    },
+    getFriendRequests: async function (filter, options,page) {
         try {
+            const limit = 5;
             const client = await this.mongoClient.connect(this.app.get('connectionStrings'));
             const database = client.db("sdistagram");
-            const collectionName = 'users';
-            const usersCollection = database.collection(collectionName);
-            const cursor = usersCollection.find(filter, options).skip((page - 1) * limit).limit(limit)
-            const users = await cursor.toArray();
-            return users;
+            const collectionName = 'friendRequest';
+            const friendRequestCollection = database.collection(collectionName);
+            const friendRequestCollectionCount = await usersCollection.count();
+            const cursor = friendRequestCollection.find(filter, options).skip((page - 1) * limit).limit(limit)
+            const friendRequests = await cursor.toArray();
+            const result = {friendRequests: friendRequests, total: friendRequestCollectionCount};
+            return result;
         } catch (error) {
             throw (error);
         }
     }
+
 };
