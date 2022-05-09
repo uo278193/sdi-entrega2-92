@@ -23,11 +23,11 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav" id="barra-menu">
-                <li><a onclick=widgetFriends()>Amigos</a></li>
+                <li><a onclick=widgetFriends()>Chats</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right" id="barra-menu-derecha">
                 <!-- Opciones de menú aqui -->
-                <li><a onclick=widgetFriends()>Amigos</a></li>
+                <li><a onclick=widgetFriends()>Chats</a></li>
             </ul>
         </div>
     </div>
@@ -47,7 +47,7 @@
         if (w == "login") {
             $("#main-container").load("widget-login.html");
         }
-        if (w == "posts") {
+        if (w == "chats") {
             $("#main-container").load("widget-posts.html");
         }
     } else {
