@@ -15,12 +15,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for friendRequest in friendRequestList %}
+                {% for request in friendRequests %}
                     <tr>
-                        <td scope="row">{{ user.nombre }}</td>
-                        <td scope="row">{{ user.apellidos }}</td>
+                        <td scope="row">{{ request.nombre }}</td>
+                        <td scope="row">{{ request.apellidos }}</td>
                         <td scope="row">
-                            <form action={{'/user/acceptFriendRequest/'~friendRequest._id}} method="post">
+                            <form action={{'/user/acceptFriendRequest/'~request._id}} method="post">
                                 <input type="submit" class="btn btn-primary btnSendFR" value="Aceptar" >
                             </form>
                         </td>
