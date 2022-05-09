@@ -62,6 +62,18 @@ module.exports = {
         } catch (error) {
             throw (error);
         }
+    },
+    sendFriendRequest: async function (friendRequest) {
+        try {
+            const client = await this.mongoClient.connect(this.app.get('connectionStrings'));
+            const database = client.db("sdistagram");
+            const collectionName = 'friendRequest';
+            const friendRequestCollection = database.collection(collectionName);
+            const result = await friendRequestCollection.insertOne(friendRequest);
+            return result.insertedId;
+        } catch (error) {
+            throw (error);
+        }
     }
 
 };

@@ -71,15 +71,24 @@ module.exports = function (app,friendsRepository,usersRepository) {
             res.redirect("/users/signup" +
                 "?message=Se ha producido un error al registrar el usuario"+
                 "&messageType=alert-danger");
-        });
+        })
     });
-    app.post('/user/sendFriendRequest/:id', function (req, res) {
-        let filter={}
-        usersRepository.
-        //sacar id user
-        //sacar id parametros
-        //crear peticion
 
+    app.post('/user/sendFriendRequest/:id', function (req, res) {
+        let filter={
+            "email":req.session.user
+        };
+        let options={}
+        usersRepository.findUser(filter,options).then(user => {
+            let friendRequest={
+                idEmisor:user._id
+                idReceptor=req.params.id
+            }
+            friendsRepository.sendFriendRequest(friendRequest);
+            res.redirect("/user/list");
+        }).catch(error => {
+            res.send("Se ha producido un error al enviar la peticion de amistad " + error)
+        });
     });
 
 }
