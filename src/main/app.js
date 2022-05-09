@@ -76,14 +76,13 @@ let postsRepository = require("./repositories/postsRepository.js"); // los repos
 postsRepository.init(app, MongoClient);
 const usersRepository = require("./repositories/usersRepository.js");
 usersRepository.init(app, MongoClient);
-const friendRequestRepository = require("./repositories/friendRequestRepository.js");
-friendRequestRepository.init(app, MongoClient);
+
 
 let indexRouter = require('./routes/index');
 require("./routes/users.js")(app, usersRepository);
 require("./routes/comments.js")(app, commentsRepository);
 //require("./routes/posts.js")(app, postsRepository, commentsRepository);
-require("./routes/friends.js")(app,friendRequestRepository,usersRepository);
+require("./routes/friends.js")(app,usersRepository);
 // cambiar
 require("./routes/api/postsAPIv1.0.js")(app, postsRepository, usersRepository);
 

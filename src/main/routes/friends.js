@@ -1,7 +1,6 @@
 const {ObjectId} = require("mongodb");
-module.exports = function (app,friendRequestRepository,usersRepository) {
-    app.get('/user/friendRequestsList', function (req, res) {
-module.exports = function (app,friendsRepository,usersRepository) {
+module.exports = function (app,usersRepository) {
+
 
     app.get('/user/friends', function (req, res) {
         let filter = {"email": req.session.user};
@@ -133,15 +132,8 @@ module.exports = function (app,friendsRepository,usersRepository) {
         });
     });
     app.post('/user/sendFriendRequest/:id', function (req, res) {
-        let filter={}
-       // usersRepository.
-        //sacar id user
-        //sacar id parametros
-        //crear peticion
-
-    app.post('/user/sendFriendRequest/:id', function (req, res) {
         let filter={
-            "_id":req.params.id
+            "_id":ObjectId(req.params.id)
         };
 
         let options={}
@@ -150,7 +142,8 @@ module.exports = function (app,friendsRepository,usersRepository) {
                 "email":req.session.user
             }
             usersRepository.findUser(filter2,options).then(userInSession=>{
-                if(user.friendRequests.includes(userInSession._id)){
+                console.log(userInSession);
+                if(Array.from(user.friendRequests).includes(userInSession._id)){
                     res.redirect("/users/list" +
                         "?message=Una petición de amistad ya había sido enviada"+
                         "&messageType=alert-danger");

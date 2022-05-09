@@ -65,7 +65,8 @@ module.exports = function (app, usersRepository) {
             apellidos: req.body.apellidos,
             admin: false,
             password: securePassword,
-            friends:[]
+            friends:[],
+            friendRequests: []
         }
         usersRepository.insertUser(user).then(userId => {
             res.redirect("/users/login" +
