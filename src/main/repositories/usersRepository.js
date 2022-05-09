@@ -53,5 +53,18 @@ module.exports = {
         } catch (error) {
             throw (error);
         }
-    }
+    },
+    updateUser: async function(user, filter, options) {
+        try {
+            const client = await this.mongoClient.connect(this.app.get('connectionStrings'));
+            const database = client.db("sdistagram");
+            const collectionName = 'users';
+            const songsCollection = database.collection(collectionName);
+            const result = await songsCollection.updateOne(filter, {$set: user}, options);
+            return result;
+        } catch (error) {
+            throw (error);
+        }
+    },
+
 };

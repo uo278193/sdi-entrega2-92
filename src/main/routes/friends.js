@@ -1,6 +1,50 @@
 const {ObjectId} = require("mongodb");
-module.exports = function (app,friendRequestRepository,usersRepository) {
-    app.get('/user/friendRequestsList', function (req, res) {
+module.exports = function (app,usersRepository) {
+
+
+    app.get('/user/friends', function (req, res) {
+        let filter = {"email": req.session.user};
+        let options = {};
+
+        let page = parseInt(req.query.page); // Es String !!!
+        if (typeof req.query.page === "undefined" || req.query.page === null || req.query.page === "0") {
+            //Puede no venir el param
+            page = 1;
+        }
+        usersRepository.findUser(filter, options).then(user => {
+
+            let friends = [];
+            let friendsIds = user.friends;
+            friendsIds.forEach(friendId => {
+                let filterFriend = {"_id": friendId};
+                usersRepository.findUser(filterFriend,options).then(friend=>{
+                    friends.push(friend);
+                })
+                }
+            );
+            let lastPage = friends.length() / 4;
+            if (friends.length() % 4 > 0) { // Sobran decimales
+                lastPage = lastPage + 1;
+            }
+            let pages = []; // paginas mostrar
+            for (let i = page - 2; i <= page + 2; i++) {
+                if (i > 0 && i <= lastPage) {
+                    pages.push(i);
+                }
+            }
+            let response = {
+                friends: friends,
+                pages: pages,
+                currentPage: page
+            }
+            res.render("friends/list.twig", response);
+        }).catch(error => {
+            res.send("Se ha producido un error al listar los usuarios " + error)
+        });
+
+    });
+    app.get('/user/friendRequests', function (req, res) {
+
         let filter = {"email": req.session.user};
         let options = {};
 
@@ -66,6 +110,7 @@ module.exports = function (app,friendRequestRepository,usersRepository) {
                 idAmigo1: friendRequest.idEmisor,
                 idAmigo2: friendRequest.idReceptor
             }
+
             friendsRepository.addFriend(friendship).catch(error => {
                     res.send("Se ha producido un error al aceptar la petición de amistad " + error)
                 });
@@ -84,12 +129,11 @@ module.exports = function (app,friendRequestRepository,usersRepository) {
             res.redirect("/users/signup" +
                 "?message=Se ha producido un error al registrar el usuario"+
                 "&messageType=alert-danger");
-        })
+        });
     });
-
     app.post('/user/sendFriendRequest/:id', function (req, res) {
         let filter={
-            "_id":req.params.id
+            "_id":ObjectId(req.params.id)
         };
 
         let options={}
@@ -98,7 +142,8 @@ module.exports = function (app,friendRequestRepository,usersRepository) {
                 "email":req.session.user
             }
             usersRepository.findUser(filter2,options).then(userInSession=>{
-                if(user.friendRequests.includes(userInSession._id)){
+                console.log(userInSession);
+                if(Array.from(user.friendRequests).includes(userInSession._id)){
                     res.redirect("/users/list" +
                         "?message=Una petición de amistad ya había sido enviada"+
                         "&messageType=alert-danger");
