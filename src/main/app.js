@@ -67,7 +67,8 @@ const userAudiosRouter = require('./routes/userAudiosRouter');
 app.use("/posts/add", userSessionRouter);
 app.use("/publications", userSessionRouter);
 app.use("/audios/", userAudiosRouter);
-app.use("/feed/", userSessionRouter)
+app.use("/feed/", userSessionRouter);
+app.use("/users/home",userSessionRouter);
 
 let commentsRepository = require("./repositories/commentsRepository.js");
 commentsRepository.init(app, MongoClient);

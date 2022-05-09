@@ -1,4 +1,10 @@
 module.exports = function (app, usersRepository) {
+    app.get('/users/home',function (req, res) {
+        let response = {
+            user: req.session.user
+        }
+        res.render('users/home.twig',response);
+    });
     app.get('/users/list', function (req, res) {
         let filter = {"admin": false,"email":{$ne:req.session.user}};
         let options = {};
@@ -96,7 +102,7 @@ module.exports = function (app, usersRepository) {
                 if(user.admin){
                     res.redirect("/users/all");
                 } else {
-                    res.redirect("/users/list");
+                    res.redirect("/users/home");
                 }
             }
         }).catch(error => {
