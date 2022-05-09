@@ -18,7 +18,6 @@ module.exports = function (app, usersRepository) {
                     {"apellidos":{$regex: ".*" + req.query.search + ".*"}}
                 ]};
         }
-        console.log(filter);
         let page = parseInt(req.query.page); // Es String !!!
         if (typeof req.query.page === "undefined" || req.query.page === null || req.query.page === "0") {
             //Puede no venir el param
@@ -65,7 +64,8 @@ module.exports = function (app, usersRepository) {
             nombre: req.body.nombre,
             apellidos: req.body.apellidos,
             admin: false,
-            password: securePassword
+            password: securePassword,
+            friends:[]
         }
         usersRepository.insertUser(user).then(userId => {
             res.redirect("/users/login" +
