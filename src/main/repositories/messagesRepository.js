@@ -16,7 +16,7 @@ module.exports = {
         } catch (error) {
             throw (error);
         }
-    }, insertMessage: function (comment, callbackFunction) {
+    }, insertMessage: function (message, callbackFunction) {
         this.mongoClient.connect(this.app.get('connectionStrings'), function (err, dbClient) {
             if (err) {
                 callbackFunction(null)
@@ -24,7 +24,7 @@ module.exports = {
                 const database = dbClient.db("sdistagram");
                 const collectionName = 'messages';
                 const messagesCollection = database.collection(collectionName);
-                messagesCollection.insertOne(comment)
+                messagesCollection.insertOne(message)
                     .then(result => callbackFunction(result.insertedId))
                     .then(() => dbClient.close())
                     .catch(err => callbackFunction({error: err.message}));
