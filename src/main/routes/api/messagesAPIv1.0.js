@@ -77,7 +77,8 @@ module.exports = function (app, usersRepository, messagesRepository) {
                 emisor: emisor,
                 destinatario: req.body.destinatario,
                 texto: req.body.texto,
-                leído: false
+                leído: false,
+                date: Date.now()/1000 // se manda en segundos
             }
             // Validar aquí: título, género, precio y autor.
             messagesRepository.insertMessage(message, function (messageId) {

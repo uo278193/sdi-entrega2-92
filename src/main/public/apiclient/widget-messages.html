@@ -1,12 +1,13 @@
 <div id="widget-messages">
-    <input type="text" class="form-control" placeholder="Filtrar por nombre" id="filter-by-name"/>
+    <input type="text" class="form-control" placeholder="Buscar mensaje" id="filter-by-name"/>
+    <!-- Hacerlo cada segundo automáticamente-->
     <button class="btn" onclick="loadMessages()">Actualizar</button>
 </div>
 <script>
     window.history.pushState("", "", "/apiclient/client.html?w=messages");
     var messages;
-    var selectedMessageId;
 
+    var interval = 1000;  // 1000 = 1 second
     function loadMessages() {
         $.ajax({
             url: URLbase + "/messages",
@@ -17,17 +18,16 @@
             success: function (response) {
                 messages = response.messages;
                 updateMessagesTable(messages);
+            }, complete: function (data) {
+                // Schedule the next
+                setTimeout(loadMessages, interval);
             },
             error: function (error) {
                 $("#main-container").load("widget-login.html");
             }
         });
     }
-
-    function messageDetail(_id) {
-        selectedMessageId = _id;
-        $("#main-container").load("widget-detail.html");
-    }
+    setTimeout(loadMessages, interval);
 
     function updateMessagesTable(messages) {
         $("#messagesTableBody").empty(); // Vaciar la tabla
@@ -71,7 +71,7 @@
     $('#filter-by-name').on('input', function (e) {
         let filteredMessages = [];
         let filterValue = $("#filter-by-name").val();
-        filteredMessages = messages.filter(song => song.title.includes(filterValue));
+        filteredMessages = messages.filter(message => message.text.includes(filterValue));
         updateMessagesTable(filteredMessages);
     });
 
