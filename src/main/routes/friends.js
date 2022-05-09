@@ -75,7 +75,7 @@ module.exports = function (app,friendsRepository,usersRepository) {
     });
     app.post('/user/sendFriendRequest/:id', function (req, res) {
         let filter={}
-        usersRepository.
+       // usersRepository.
         //sacar id user
         //sacar id parametros
         //crear peticion
