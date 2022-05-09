@@ -43,7 +43,7 @@ module.exports = function (app,usersRepository) {
         });
 
     });
-    app.get('/user/friendRequests', function (req, res) {
+    app.get('/user/friendRequests', async function (req, res) {
 
         let filter = {"email": req.session.user};
         let options = {};
@@ -53,19 +53,22 @@ module.exports = function (app,usersRepository) {
             //Puede no venir el param
             page = 1;
         }
-        usersRepository.findUser(filter, options).then(user => {
+        let friendRequests = [];
+        usersRepository.findUser(filter, options).then(async user => {
 
-            let friendRequests = [];
+
             let friendsRequestsIds = user.friendRequests;
-            friendRequestsIds.forEach(friendRequestsId => {
-                    let filterFriend = {"_id": friendRequestsId};
-                    usersRepository.findUser(filterFriend,options).then(friendRequestUser=>{
-                        friendRequests.push(friendRequestUser);
-                    })
-                }
-            );
-            let lastPage = friendRequests.length() / 4;
-            if (friendRequests.length() % 4 > 0) { // Sobran decimales
+            for (const friendRequestId of friendsRequestsIds) {
+                let filterFriend = {"_id": friendRequestId};
+                 await usersRepository.findUser(filterFriend, options).then(friendRequestUser => {
+                    console.log("a")
+                    friendRequests.push(friendRequestUser);
+
+                })
+            }
+            console.log(friendRequests);
+            let lastPage = friendRequests.length / 4;
+            if (friendRequests.length % 4 > 0) { // Sobran decimales
                 lastPage = lastPage + 1;
             }
             let pages = []; // paginas mostrar
@@ -79,7 +82,7 @@ module.exports = function (app,usersRepository) {
                 pages: pages,
                 currentPage: page
             }
-            res.render("friends/friendRequestsList.twig", response);
+            res.render("friends/friendRequestList.twig", response);
         }).catch(error => {
             res.send("Se ha producido un error al listar los usuarios " + error)
         });
@@ -141,17 +144,23 @@ module.exports = function (app,usersRepository) {
             let filter2={
                 "email":req.session.user
             }
+            let duplicado = false;
             usersRepository.findUser(filter2,options).then(userInSession=>{
-                console.log(userInSession);
-                if(Array.from(user.friendRequests).includes(userInSession._id)){
+                user.friendRequests.forEach(friendRequest=>{
+                    if(friendRequest.toString() === userInSession._id.toString()){
+                        duplicado = true;
+                    }
+                })
+                if(duplicado){
                     res.redirect("/users/list" +
                         "?message=Una petición de amistad ya había sido enviada"+
                         "&messageType=alert-danger");
+                }else {
+                    user.friendRequests.push(userInSession._id);
+                    console.log(user);
+                    usersRepository.updateUser(user,filter,options);
+                    res.redirect("/users/list");
                 }
-                user.friendRequests.push(userInSession._id);
-                usersRepository.updateUser(user,filter,options)
-                    .catch("Se ha producido un error al enviar la petición de amistad " + error);
-                res.redirect("/user/list");
             })
         }).catch(error => {
             res.send("Se ha producido un error al enviar la petición de amistad " + error)
