@@ -86,8 +86,6 @@ require("./routes/comments.js")(app, commentsRepository);
 //require("./routes/posts.js")(app, postsRepository, commentsRepository);
 require("./routes/friends.js")(app,usersRepository);
 // cambiar
-require("./routes/api/postsAPIv1.0.js")(app, postsRepository, usersRepository);
-
 require("./routes/api/messagesAPIv1.0.js")(app, usersRepository, messagesRepository);
 
 // view engine setup

@@ -1,5 +1,5 @@
 const {ObjectId} = require("mongodb");
-module.exports = function (app,usersRepository) {
+module.exports = function (app, usersRepository) {
 
     app.get('/user/friends', async function (req, res) {
 
@@ -57,7 +57,7 @@ module.exports = function (app,usersRepository) {
             let friendsRequestsIds = user.friendRequests;
             for (const friendRequestId of friendsRequestsIds) {
                 let filterFriend = {"_id": friendRequestId};
-                 await usersRepository.findUser(filterFriend, options).then(friendRequestUser => {
+                await usersRepository.findUser(filterFriend, options).then(friendRequestUser => {
                     friendRequests.push(friendRequestUser);
 
                 })
@@ -85,75 +85,114 @@ module.exports = function (app,usersRepository) {
     });
 
     app.post('/user/acceptFriendRequest/:id', function (req, res) {
-        let filter = {"email":req.session.user}
+        //TODO
+        //Comprobar que la id no sea la del user
+        //Comprobar que exista la friendRequest
+        //comprobar que no sea amigo
+
+        let filter = {"email": req.session.user}
         let options = {};
-        usersRepository.findUser(filter,options).then(userInSession=>{
-            let filter2 = {_id: ObjectId(req.params.id)}
-            usersRepository.findUser(filter2,options).then(user2 =>{
-                    //tratar userInSession
-                    userInSession.friends.push(user2._id);
-                    for(var i=0; i<userInSession.friendRequests.length; i++) {
-                        if (userInSession.friendRequests[i].toString() == user2._id.toString()) {
-                            userInSession.friendRequests.splice(i, 1);
-                            break;
+        usersRepository.findUser(filter, options).then(userInSession => {
+            //Comprobar que la id no sea la del user
+            if (req.params.id == userInSession._id.toString()) {
+                res.redirect("/users/list" +
+                    "?message=No puedes aceptar una petición de amistad a ti mismo" +
+                    "&messageType=alert-danger");
+            } else {
+                let filter2 = {_id: ObjectId(req.params.id)}
+                usersRepository.findUser(filter2, options).then(user2 => {
+                        //Comprobar que exista la friendRequest
+                        let existeFriendRequest = false
+                        for (request in userSession.friendRequests) {
+                            if (request.toString() == user2._id.toString()) {
+                                existeFriendRequest = true;
+                            }
+                        }
+                        let existeAmistad = false
+                        for (friendship in userSession.friends) {
+                            if (friendship.toString() == user2._id.toString()) {
+                                existeAmistad = true;
+                            }
+                        }
+                        for (friendship in user2.friends) {
+                            if (friendship.toString() == userInSession._id.toString()) {
+                                existeAmistad = true;
+                            }
+                        }
+                        if (existeFriendRequest == false) {
+                            res.redirect("/users/list" +
+                                "?message=No puedes aceptar una petición de amistad que no existe" +
+                                "&messageType=alert-danger");
+                        } else if (existeAmistad == true) {
+                            res.redirect("/users/list" +
+                                "?message=No puedes aceptar una petición de amistad cuando ya eres amigo de esa persona" +
+                                "&messageType=alert-danger");
+                        } else {
+                            //tratar userInSession
+                            userInSession.friends.push(user2._id);
+                            for (var i = 0; i < userInSession.friendRequests.length; i++) {
+                                if (userInSession.friendRequests[i].toString() == user2._id.toString()) {
+                                    userInSession.friendRequests.splice(i, 1);
+                                    break;
+                                }
+                            }
+                            usersRepository.updateUser(userInSession, filter, options)
+                            //tratar user2
+                            user2.friends.push(userInSession._id);
+                            for (var i = 0; i < user2.friendRequests.length; i++) {
+                                if (user2.friendRequests[i].toString() == userInSession._id.toString()) {
+                                    user2.friendRequests.splice(i, 1);
+                                    break;
+                                }
+                            }
+                            usersRepository.updateUser(user2, filter2, options)
+                            res.redirect('/users/list')
                         }
                     }
-                    usersRepository.updateUser(userInSession,filter,options)
-                    //tratar user2
-                    user2.friends.push(userInSession._id);
-                    for(var i=0; i<user2.friendRequests.length; i++) {
-                        if (user2.friendRequests[i].toString() == userInSession._id.toString()) {
-                            user2.friendRequests.splice(i, 1);
-                            break;
-                        }
-                    }
-                    usersRepository.updateUser(user2,filter2,options)
-                    res.redirect('/users/list')
-                }
-            )
+                )
+            }
         }).catch(error => {
             res.send("Se ha producido un error al aceptar la petición de amistad " + error)
         });
+
     });
     app.post('/user/sendFriendRequest/:id', function (req, res) {
-        let filter={
-            "_id":ObjectId(req.params.id)
-        };
-        let options={}
-        usersRepository.findUser(filter,options).then(user => {
-            let filter2={
-                "email":req.session.user
-            }
-            let duplicado = false;
-            let esUsuario= false;
-            usersRepository.findUser(filter2,options).then(userInSession=>{
-                user.friendRequests.forEach(friendRequest=>{
-                    if(friendRequest.toString() === userInSession._id.toString()){
-                        duplicado = true;
-                    }
-                    if(friendRequest.toString()===req.params.id){
+            let filter = {
+                "_id": ObjectId(req.params.id)
+            };
+            let options = {}
+            usersRepository.findUser(filter, options).then(user => {
+                let filter2 = {
+                    "email": req.session.user
+                }
+                let duplicado = false;
+                let esUsuario = false;
+                usersRepository.findUser(filter2, options).then(userInSession => {
+                    if (userInSession._id.toString() === req.params.id) {
                         esUsuario = true;
                     }
-                })
-                if(duplicado){
-                    res.redirect("/users/list" +
-                        "?message=Una petición de amistad ya había sido enviada"+
-                        "&messageType=alert-danger");
-                } else {
-                    if (esUsuario){
+                    user.friendRequests.forEach(friendRequest => {
+                        if (friendRequest.toString() === userInSession._id.toString()) {
+                            duplicado = true;
+                        }
+                    })
+                    if (duplicado) {
                         res.redirect("/users/list" +
-                            "?message=No puedes enviarte una petición de amistad a ti mismo"+
+                            "?message=Una petición de amistad ya había sido enviada" +
                             "&messageType=alert-danger");
-                    }else{
+                    } else if (esUsuario) {
+                        res.redirect("/users/list" +
+                            "?message=No puedes enviarte una petición de amistad a ti mismo" +
+                            "&messageType=alert-danger");
+                    } else {
                         user.friendRequests.push(userInSession._id);
-                        console.log(user);
-                        usersRepository.updateUser(user,filter,options);
+                        usersRepository.updateUser(user, filter, options);
                         res.redirect("/users/list");
                     }
-                }
-            })
-        }).catch(error => {
-            res.send("Se ha producido un error al enviar la petición de amistad " + error)
-        });
-    });
+                })
+            }).catch(error => {
+                res.send("Se ha producido un error al enviar la petición de amistad " + error)
+            });
+        }
+    );
 }
