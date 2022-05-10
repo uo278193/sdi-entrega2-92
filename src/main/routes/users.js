@@ -57,7 +57,7 @@ module.exports = function (app, usersRepository) {
             } else {
                 req.session.user = user.email;
                 if(user.admin){
-                    res.redirect("/users/all");
+                    res.redirect("/admin/users");
                 } else {
                     res.redirect("/users/list");
                 }

@@ -1,0 +1,42 @@
+<div id="widget-detalles">
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="emisor"></label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="emisor"
+                   placeholder="Título de la canción" id="emisor" readonly/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="kind">Género:</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" name="kind"
+                   placeholder="Género de la canción" id="kind" readonly/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2" for="price">Precio (€):</label>
+        <div class="col-sm-10">
+            <input type="number" step="0.01" class="form-control" name="price"
+                   placeholder="2.50" id="price" readonly/>
+        </div>
+    </div>
+</div>
+<script>
+    $.ajax({
+        url: URLbase + "/messages/" + selectedMessageId,
+        type: "GET",
+        data: {},
+        dataType: 'json',
+        headers: {
+            "token": token
+        },
+        success: function (response) {
+            $("#emisor").val(response.message.emisor);
+            $("#kind").val(response.song.kind);
+            $("#price").val(response.song.price);
+        },
+        error: function (error) {
+            $("#main-container").load("widget-login.html");
+        }
+    });
+</script>
