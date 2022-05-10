@@ -31,7 +31,7 @@
                 {% for user in usersList %}
                 <tr>
                     <td scope="row">
-                        <input type = "checkbox" name="user" class = "chkUser" id = "chkUser" th:value = "${user.id}">
+                        <input type = "checkbox" name="user" class = "chkUser" id = "chkUser" value = {{ user.email }}>
                     </td>
                     <td scope="row" th:text="${user.email}">
                         {{ user.email }}
