@@ -76,6 +76,8 @@ let messagesRepository = require("./repositories/messagesRepository.js"); // los
 messagesRepository.init(app, MongoClient);
 const usersRepository = require("./repositories/usersRepository.js");
 usersRepository.init(app, MongoClient);
+const postsRepository = require("./repositories/postsRepository.js");
+postsRepository.init(app, MongoClient);
 
 let indexRouter = require('./routes/index');
 require("./routes/users.js")(app, usersRepository);
