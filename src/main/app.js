@@ -64,6 +64,7 @@ app.use("/api/v1.0/posts/", userTokenRouter);
 const userAudiosRouter = require('./routes/userAudiosRouter');
 
 app.use("/posts/add", userSessionRouter);
+app.use("/posts/myPosts", userSessionRouter);
 app.use("/publications", userSessionRouter);
 app.use("/audios/", userAudiosRouter);
 app.use("/feed/", userSessionRouter)
