@@ -1,8 +1,8 @@
 const {ObjectId} = require("mongodb");
 module.exports = function (app,usersRepository) {
 
+    app.get('/user/friends', async function (req, res) {
 
-    app.get('/user/friends', function (req, res) {
         let filter = {"email": req.session.user};
         let options = {};
 
@@ -11,19 +11,18 @@ module.exports = function (app,usersRepository) {
             //Puede no venir el param
             page = 1;
         }
-        usersRepository.findUser(filter, options).then(user => {
-
-            let friends = [];
+        let friends = [];
+        usersRepository.findUser(filter, options).then(async user => {
             let friendsIds = user.friends;
-            friendsIds.forEach(friendId => {
+            for (const friendId of friendsIds) {
                 let filterFriend = {"_id": friendId};
-                usersRepository.findUser(filterFriend,options).then(friend=>{
-                    friends.push(friend);
+                await usersRepository.findUser(filterFriend, options).then(friendUser => {
+                    friends.push(friendUser);
+
                 })
-                }
-            );
-            let lastPage = friends.length() / 4;
-            if (friends.length() % 4 > 0) { // Sobran decimales
+            }
+            let lastPage = friends.length / 4;
+            if (friends.length % 4 > 0) { // Sobran decimales
                 lastPage = lastPage + 1;
             }
             let pages = []; // paginas mostrar
@@ -55,18 +54,14 @@ module.exports = function (app,usersRepository) {
         }
         let friendRequests = [];
         usersRepository.findUser(filter, options).then(async user => {
-
-
             let friendsRequestsIds = user.friendRequests;
             for (const friendRequestId of friendsRequestsIds) {
                 let filterFriend = {"_id": friendRequestId};
                  await usersRepository.findUser(filterFriend, options).then(friendRequestUser => {
-                    console.log("a")
                     friendRequests.push(friendRequestUser);
 
                 })
             }
-            console.log(friendRequests);
             let lastPage = friendRequests.length / 4;
             if (friendRequests.length % 4 > 0) { // Sobran decimales
                 lastPage = lastPage + 1;
@@ -90,81 +85,75 @@ module.exports = function (app,usersRepository) {
     });
 
     app.post('/user/acceptFriendRequest/:id', function (req, res) {
-        let filter = {_id: ObjectId(req.params.id)}
+        let filter = {"email":req.session.user}
         let options = {};
-        //TODO
-        //pillar la friend request de la id
-        friendRequestRepository.findFriendRequest(filter,options).then(friendRequest => {
-
-            //borras la friend request de emisor
-            filter={idEmisor:ObjectId(friendRequest.idEmisor), idReceptor:ObjectId(friendRequest.idReceptor)}
-            friendsRepository.deleteFriendRequest(filter).catch(error => {
-                    res.send("Se ha producido un error al aceptar la petición de amistad " + error)
-                })
-
-            //borras friend request de receptor
-            filter={idReceptor:ObjectId(friendRequest.idEmisor),idEmisor:ObjectId(friendRequest.idReceptor)}
-            friendsRepository.deleteFriendRequest(filter).catch(error => {
-                    res.send("Se ha producido un error al aceptar la petición de amistad " + error)
-                });
-
-            //añades friend1 a friend2 como amigo
-            let friendship = {
-                idAmigo1: friendRequest.idEmisor,
-                idAmigo2: friendRequest.idReceptor
-            }
-
-            friendsRepository.addFriend(friendship).catch(error => {
-                    res.send("Se ha producido un error al aceptar la petición de amistad " + error)
-                });
-
-            //añades friend2 a friend1 como amigo
-            friendship = {
-                idAmigo1: friendRequest.idReceptor,
-                idAmigo2: friendRequest.idEmisor
-            }
-            friendsRepository.addFriend(friendship).catch(error => {
-                    res.send("Se ha producido un error al aceptar la petición de amistad " + error)
-                });
-
-            res.redirect("/user/friends");
+        usersRepository.findUser(filter,options).then(userInSession=>{
+            let filter2 = {_id: ObjectId(req.params.id)}
+            usersRepository.findUser(filter2,options).then(user2 =>{
+                    //tratar userInSession
+                    userInSession.friends.push(user2._id);
+                    for(var i=0; i<userInSession.friendRequests.length; i++) {
+                        if (userInSession.friendRequests[i].toString() == user2._id.toString()) {
+                            userInSession.friendRequests.splice(i, 1);
+                            break;
+                        }
+                    }
+                    usersRepository.updateUser(userInSession,filter,options)
+                    //tratar user2
+                    user2.friends.push(userInSession._id);
+                    for(var i=0; i<user2.friendRequests.length; i++) {
+                        if (user2.friendRequests[i].toString() == userInSession._id.toString()) {
+                            user2.friendRequests.splice(i, 1);
+                            break;
+                        }
+                    }
+                    usersRepository.updateUser(user2,filter2,options)
+                    res.redirect('/users/list')
+                }
+            )
         }).catch(error => {
-            res.redirect("/users/signup" +
-                "?message=Se ha producido un error al registrar el usuario"+
-                "&messageType=alert-danger");
+            res.send("Se ha producido un error al aceptar la petición de amistad " + error)
         });
     });
     app.post('/user/sendFriendRequest/:id', function (req, res) {
         let filter={
             "_id":ObjectId(req.params.id)
         };
-
         let options={}
         usersRepository.findUser(filter,options).then(user => {
             let filter2={
                 "email":req.session.user
             }
             let duplicado = false;
+            let esUsuario= false;
             usersRepository.findUser(filter2,options).then(userInSession=>{
                 user.friendRequests.forEach(friendRequest=>{
                     if(friendRequest.toString() === userInSession._id.toString()){
                         duplicado = true;
+                    }
+                    if(friendRequest.toString()===req.params.id){
+                        esUsuario = true;
                     }
                 })
                 if(duplicado){
                     res.redirect("/users/list" +
                         "?message=Una petición de amistad ya había sido enviada"+
                         "&messageType=alert-danger");
-                }else {
-                    user.friendRequests.push(userInSession._id);
-                    console.log(user);
-                    usersRepository.updateUser(user,filter,options);
-                    res.redirect("/users/list");
+                } else {
+                    if (esUsuario){
+                        res.redirect("/users/list" +
+                            "?message=No puedes enviarte una petición de amistad a ti mismo"+
+                            "&messageType=alert-danger");
+                    }else{
+                        user.friendRequests.push(userInSession._id);
+                        console.log(user);
+                        usersRepository.updateUser(user,filter,options);
+                        res.redirect("/users/list");
+                    }
                 }
             })
         }).catch(error => {
             res.send("Se ha producido un error al enviar la petición de amistad " + error)
         });
     });
-
 }
