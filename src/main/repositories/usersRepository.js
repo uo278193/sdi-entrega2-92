@@ -36,13 +36,14 @@ module.exports = {
         } catch (error) {
             throw (error);
         }
-    }, deleteUser: async function (user) {
+    }, deleteUser: async function (filter, options) {
         try {
             const client = await this.mongoClient.connect(this.app.get('connectionStrings'));
             const database = client.db("sdistagram");
             const collectionName = 'users';
             const usersCollection = database.collection(collectionName);
-            usersCollection.deleteOne(user);
+            const result = await usersCollection.deleteOne(filter, options);
+            return result;
         } catch (error) {
             throw (error);
         }

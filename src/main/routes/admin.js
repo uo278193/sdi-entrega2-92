@@ -19,11 +19,41 @@ module.exports = function (app, usersRepository) {
     });
 
     app.get('/admin/users/delete', function (req, res) {
-        let users = req.body.chkUser;
-        users.forEach(user => usersRepository.deleteUser(user));
-        let activeUser = req.session.user;
-        let usersList = usersRepository.findNoActiveUsers(activeUser);
-        res.render("admin/list.twig", {activeUser : activeUser, usersList : usersList});
+        usersRepository.findUsers({}, {}).then(users => {
+            let usersToDelete = req.query.user;
+            if(typeof(usersToDelete) != "undefined"){
+                if (typeof(usersToDelete) === "string"){
+                    // Solo se ha seleccionado un usuario para el borrado
+                    let filter = {email: usersToDelete};
+                    usersRepository.deleteUser(filter, {}).then(result => {
+                        if (result == null || result.deletedCount == 0) {
+                            res.send("No se ha podido eliminar el usuario");
+                        }
+                    }).catch(error => {
+                        res.send("Se ha producido un error al intentar eliminar los usuarios " + error)
+                    });
+                }
+                else {
+                    for (let i = 0; i < users.length; i++) {
+                        for (let j = 0; j < usersToDelete.length; j++) {
+                            if (usersToDelete[j] === users[i].email) {
+                                let filter = {email: usersToDelete[j]};
+                                usersRepository.deleteUser(filter, {}).then(result => {
+                                    if (result == null || result.deletedCount == 0) {
+                                        res.send("No se ha podido eliminar el usuario");
+                                    }
+                                }).catch(error => {
+                                    res.send("Se ha producido un error al intentar eliminar los usuarios " + error)
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+           // else {res.redirect("/admin/users"+ "?message=No se han seleccionado usuarios para el borrado." +
+             //   "&messageType=alert-info");}
+            res.redirect("/admin/users");
+        });
     });
 
 }
