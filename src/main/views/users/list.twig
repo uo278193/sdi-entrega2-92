@@ -33,15 +33,27 @@
                 <tbody>
                 {% for user in users %}
                 <tr>
-
                     <td scope="row">{{ user.email }}</td>
                     <td scope="row">{{ user.nombre }}</td>
                     <td scope="row">{{ user.apellidos }}</td>
-
                     <td scope="row">
-                       <form action={{'/user/sendFriendRequest/'~user._id}} method="post">
-                           <input type="submit" class="btn btn-primary btnSendFR" value="Enviar petición de amistad" >
-                       </form>
+                        {% set mostrarBoton=true%}
+                        {% for id in user.friends %}
+                             {% if(id==userInSessionId) %}
+                                 {% set mostrarBoton=false %}
+                             {% endif %}
+
+                        {% endfor %}
+                        {% for id in user.friendRequests %}
+                            {% if(id==userInSessionId) %}
+                                {% set mostrarBoton=false %}
+                            {% endif %}
+                        {% endfor %}
+                        {% if mostrarBoton==true %}
+                             <form action={{'/user/sendFriendRequest/'~user._id}} method="post">
+                                <input type="submit" class="btn btn-primary btnSendFR" value="Enviar petición de amistad" >
+                             </form>
+                        {% endif %}
                    </td>
                </tr>
                {% endfor %}
@@ -49,9 +61,6 @@
            </table>
 
        </div>
-
-
-
 
        <!-- Fin del Bloque autor -->
     </div>
