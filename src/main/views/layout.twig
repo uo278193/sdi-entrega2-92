@@ -35,8 +35,6 @@
     </div>
 </nav>
 {% block body %}
-    <div class="container">
-        <!-- Contenido -->
         <div class="container">
             <script> let params = new URLSearchParams(location.search);
                 let message = params.get("message");
@@ -51,7 +49,6 @@
             <!-- Contenido --> {% block main_container %} <!-- Posible contenido por defecto -->
             {% endblock %}
         </div>
-    </div>
 {% endblock %}
 </body>
 </html>
