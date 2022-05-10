@@ -16,12 +16,18 @@
                 </thead>
                 <tbody>
                 {% for friend in friends %}
-                    <tr>
-                        <td scope="row">{{ friend.email }}</td>
-                        <td scope="row">{{ friend.nombre }}</td>
-                        <td scope="row">{{ friend.apellidos }}</td>
-                    </tr>
-                {% endfor %}
+
+
+                        <tr>
+                            <td scope="row">{{ friend.email }}</td>
+
+                            <td scope="row"> <a href="/posts/{{ friend.email }}">{{ friend.nombre }}  </a></td>
+
+                            <td scope="row">{{ friend.apellidos }}</td>
+                        </tr>
+
+
+                        {% endfor %}
                 </tbody>
             </table>
 
