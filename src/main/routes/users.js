@@ -14,6 +14,7 @@ module.exports = function (app, usersRepository) {
             res.redirect("/users/signup" +
                 "?message=Las constraseñas no coinciden"+
                 "&messageType=alert-danger");
+            return;
         }
         let securePassword = app.get("crypto").createHmac('sha256', app.get('clave'))
             .update(req.body.password).digest('hex');
