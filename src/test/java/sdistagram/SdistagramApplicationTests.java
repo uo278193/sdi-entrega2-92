@@ -1,5 +1,11 @@
 package sdistagram;
 
+import com.mongodb.MongoException;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import org.bson.conversions.Bson;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,6 +17,7 @@ import sdistagram.util.SeleniumUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mongodb.client.model.Filters.eq;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -32,6 +39,9 @@ class SdistagramApplicationTests {
     // Común a Windows y a MACOSX
     static WebDriver driver = getDriver(PathFirefox, Geckodriver);
     static String URL = "http://localhost:8081";
+    static MongoClient client;
+    static MongoDatabase database;
+    static MongoCollection doc;
 
     public static WebDriver getDriver(String PathFirefox, String Geckodriver) {
         System.setProperty("webdriver.firefox.bin", PathFirefox);
@@ -43,6 +53,8 @@ class SdistagramApplicationTests {
     @BeforeEach
     public void setUp() {
         driver.navigate().to(URL);
+        Bson query = eq("name", "test");
+        doc.deleteMany(query);
     }
 
     //Después de cada prueba se borran las cookies del navegador
@@ -54,11 +66,22 @@ class SdistagramApplicationTests {
     //Antes de la primera prueba
     @BeforeAll
     static public void begin() {
+        // conectar a mongodb
+        try{
+            client = MongoClients.create("mongodb+srv://admin:admin@sdi-entrega2-92.qguw0.mongodb.net/myFirstDatabase?retryWrites=true&w=majority");
+            database = client.getDatabase("sdigram");
+            doc = database.getCollection("users");
+        } catch (MongoException e){
+            e.printStackTrace();
+        }
     }
 
     // Al finalizar la última prueba
     @AfterAll
     static public void end() {
+        Bson query = eq("name", "test");
+        doc.deleteMany(query);
+        client.close();
         //Cerramos el navegador al finalizar las pruebas
         driver.quit();
     }

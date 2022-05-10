@@ -58,22 +58,24 @@ const userAuthorRouter = require('./routes/userAuthorRouter');
 app.use("/posts/edit", userAuthorRouter);
 app.use("/posts/delete", userAuthorRouter);
 app.use("/users/list",userSessionRouter);
+app.use("/messages/edit", userAuthorRouter);
+app.use("/messages/delete", userAuthorRouter);
 
 const userTokenRouter = require('./routes/userTokenRouter'); // habrá que cambiarlo
-app.use("/api/v1.0/posts/", userTokenRouter);
+app.use("/api/v1.0/sdigram/", userTokenRouter);
 
 const userAudiosRouter = require('./routes/userAudiosRouter');
 
-app.use("/posts/add", userSessionRouter);
+app.use("/messages/add", userSessionRouter);
 app.use("/publications", userSessionRouter);
 app.use("/audios/", userAudiosRouter);
 app.use("/feed/", userSessionRouter);
 app.use("/users/home",userSessionRouter);
 
-let commentsRepository = require("./repositories/commentsRepository.js");
+let commentsRepository = require("./repositories/messagesRepository.js");
 commentsRepository.init(app, MongoClient);
-let postsRepository = require("./repositories/postsRepository.js"); // los repositorios deben estar definidos ANTES que los controladores
-postsRepository.init(app, MongoClient);
+let messagesRepository = require("./repositories/messagesRepository.js"); // los repositorios deben estar definidos ANTES que los controladores
+messagesRepository.init(app, MongoClient);
 const usersRepository = require("./repositories/usersRepository.js");
 usersRepository.init(app, MongoClient);
 
@@ -85,6 +87,8 @@ require("./routes/comments.js")(app, commentsRepository);
 require("./routes/friends.js")(app,usersRepository);
 // cambiar
 require("./routes/api/postsAPIv1.0.js")(app, postsRepository, usersRepository);
+
+require("./routes/api/messagesAPIv1.0.js")(app, usersRepository, messagesRepository);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
