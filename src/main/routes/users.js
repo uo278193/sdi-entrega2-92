@@ -105,8 +105,8 @@ module.exports = function (app, usersRepository) {
                     "&messageType=alert-danger ");
             } else {
                 req.session.user = user.email;
-                if (user.admin) {
-                    res.redirect("/users/all");
+                if(user.admin){
+                    res.redirect("/admin/users");
                 } else {
                     res.redirect("/users/home");
                 }

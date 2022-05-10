@@ -1,0 +1,54 @@
+{% extends "layout.twig" %}
+{% block title %} Usuarios {% endblock %}
+
+{% block main_container %}
+<h2>Usuarios</h2>
+
+<div class="table-responsive">
+    <form action="/admin/users/delete" method="get">
+        <table class="table table-hover" th:fragment="tableUsers" id="tableUsers">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellidos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:fragment="${activeUser}">
+                    <td scope="row"></td>
+                    <td scope="row" th:text="${activeUser.email}">
+                        {{ activeUser.email }}
+                    </td>
+                    <td scope="row" th:text="${activeUser.name}">
+                        {{ activeUser.nombre }}
+                    </td>
+                    <td scope="row" th:text="${activeUser.lastName}">
+                        {{ activeUser.apellidos }}
+                    </td>
+                </tr>
+                {% for user in usersList %}
+                <tr>
+                    <td scope="row">
+                        <input type = "checkbox" name="user" class = "chkUser" id = "chkUser" value = {{ user.email }}>
+                    </td>
+                    <td scope="row" th:text="${user.email}">
+                        {{ user.email }}
+                    </td>
+                    <td scope="row" th:text="${user.name}">
+                        {{ user.nombre }}
+                    </td>
+                    <td scope="row" th:text="${user.lastName}">
+                        {{ user.apellidos }}
+                    </td>
+                </tr>
+             {% endfor %}
+            </tbody>
+        </table>
+        <input id="delete" type="submit" class="btn btn-primary"  value="Eliminar usuarios">
+	</form>
+</div>
+
+
+{% endblock %}
