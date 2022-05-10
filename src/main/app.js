@@ -55,6 +55,9 @@ app.set('connectionStrings', url);
 // Antes de los controladores de /users y /songs
 const userSessionRouter = require('./routes/userSessionRouter');
 const userAuthorRouter = require('./routes/userAuthorRouter');
+app.use("/posts/edit", userAuthorRouter);
+app.use("/posts/delete", userAuthorRouter);
+app.use("/users/list",userSessionRouter);
 app.use("/messages/edit", userAuthorRouter);
 app.use("/messages/delete", userAuthorRouter);
 
@@ -66,7 +69,8 @@ const userAudiosRouter = require('./routes/userAudiosRouter');
 app.use("/messages/add", userSessionRouter);
 app.use("/publications", userSessionRouter);
 app.use("/audios/", userAudiosRouter);
-app.use("/feed/", userSessionRouter)
+app.use("/feed/", userSessionRouter);
+app.use("/users/home",userSessionRouter);
 
 let commentsRepository = require("./repositories/messagesRepository.js");
 commentsRepository.init(app, MongoClient);
@@ -75,12 +79,14 @@ messagesRepository.init(app, MongoClient);
 const usersRepository = require("./repositories/usersRepository.js");
 usersRepository.init(app, MongoClient);
 
+
 let indexRouter = require('./routes/index');
 require("./routes/users.js")(app, usersRepository);
 require("./routes/admin.js")(app, usersRepository);
 require("./routes/comments.js")(app, commentsRepository);
-require("./routes/authors.js")(app);
-
+//require("./routes/posts.js")(app, postsRepository, commentsRepository);
+require("./routes/friends.js")(app,usersRepository);
+// cambiar
 require("./routes/api/messagesAPIv1.0.js")(app, usersRepository, messagesRepository);
 
 // view engine setup
