@@ -1,0 +1,38 @@
+{% extends "layout.twig" %}
+{% block title %} Listado Post{% endblock %}
+{% block main_container %}
+
+    <h2>Posts</h2>
+    <div class="row">
+        <!-- http://librosweb.es/libro/bootstrap_3/capitulo_2/tipos_de_rejillas.html -->
+        <!-- Inicio del Bloque canción -->
+        {% for post in posts %}
+            <div class="col-xs-6 col-sm-6 col-md-4 col-lg-3">
+                <div style="width:200px">
+                    <a> ------------------------------------
+                        <div> titulo:{{ post.title }} </div>
+                        <div >texto: {{ post.texto }} </div>
+                        <div >fecha: {{ post.date }} </div>
+                        ------------------------------------
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+        <!-- Fin del Bloque canción -->
+    </div>
+
+    <!-- Paginación mostrar la actual y 2 anteriores y dos siguientes -->
+    <div class="row text-center">
+        <ul class="pagination">
+            {% for page in pages %}
+                <li class="page-item" id="pi-{{ page }}">
+                    <a class="page-link" href="/posts/{{ user }}/?page={{ page }}">{{ page }}</a>
+                </li>
+            {% endfor %}
+            <script>
+                $("#pi-" + "{{ currentPage }}").addClass("active");
+            </script>
+        </ul>
+    </div>
+
+{% endblock %}
