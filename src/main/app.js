@@ -77,6 +77,7 @@ usersRepository.init(app, MongoClient);
 
 let indexRouter = require('./routes/index');
 require("./routes/users.js")(app, usersRepository);
+require("./routes/admin.js")(app, usersRepository);
 require("./routes/comments.js")(app, commentsRepository);
 //require("./routes/posts.js")(app, postsRepository, commentsRepository);
 require("./routes/authors.js")(app);
