@@ -146,7 +146,7 @@ module.exports = function (app, usersRepository) {
                                 }
                             }
                             usersRepository.updateUser(user2, filter2, options)
-                            res.redirect('/users/list')
+                            res.redirect('/user/friendRequests')
                         }
                     }
                 )
