@@ -59,8 +59,19 @@ module.exports = function (app, usersRepository) {
         let passwd2 = req.body.password2;
         if (passwd !== passwd2) {
             res.redirect("/users/signup" +
-                "?message=Las constraseñas no coinciden" +
+                "?message=Las contraseñas no coinciden" +
                 "&messageType=alert-danger");
+            return;
+        }
+        let filter = {
+            email: req.body.email
+        }
+        let options={}
+        if (usersRepository.findUser(filter,options) != null) {
+            res.redirect("/users/signup" +
+                "?message=Este email ya está en uso" +
+                "&messageType=alert-danger");
+            return;
         }
         let securePassword = app.get("crypto").createHmac('sha256', app.get('clave'))
             .update(req.body.password).digest('hex');
