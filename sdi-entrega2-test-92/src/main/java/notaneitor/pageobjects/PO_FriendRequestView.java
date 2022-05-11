@@ -11,7 +11,7 @@ import java.util.List;
 public class PO_FriendRequestView extends PO_NavView{
 
     static public void checkNumberOfFriendRequest(WebDriver driver, int size) {
-        List<WebElement> elements = PO_View.checkElementBy(driver, "free", "//*[@id=\"idTablaListaPeticionesAmistad\"]/tbody");
+        List<WebElement> elements = PO_View.checkElementBy(driver, "free", "//*[@id=\"idTablaListaPeticionesAmistad\"]/tbody/tr");
         Assertions.assertEquals(size, elements.size());
     }
     public static void clickAcceptFriendRequest(WebDriver driver, String textOption, String criterio, String targetText) {

@@ -1,9 +1,8 @@
 package notaneitor;
 
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.MongoClient;
+
 import notaneitor.pageobjects.*;
+import notaneitor.util.MongoUtils;
 import notaneitor.util.SeleniumUtils;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
@@ -35,6 +34,7 @@ class NotaneitorApplicationTests {
     //Común a Windows y a MACOSX
     static final String URL = "http://localhost:8081";
     static WebDriver driver = getDriver(PathFirefox, Geckodriver);
+    static MongoUtils mongo= new MongoUtils();
 
     public static WebDriver getDriver(String PathFirefox, String Geckodriver) {
         System.setProperty("webdriver.firefox.bin", PathFirefox);
@@ -52,6 +52,8 @@ class NotaneitorApplicationTests {
     //Al finalizar la última prueba
     @AfterAll
     static public void end() {
+        //Borramos la amistad entre estos 2 usuarios para que vuelvan a ejecutarese los tests correctamente
+        mongo.deleteFriendship("user11@email.com","user09@email.com");
         //Cerramos el navegador al finalizar las pruebas
         //driver.quit();
     }
@@ -408,7 +410,6 @@ class NotaneitorApplicationTests {
         //Comprobacion pagina 3 4 elementos
         List<WebElement> page3 =  SeleniumUtils.waitLoadElementsBy(driver,"free", "//tbody/tr",PO_View.getTimeout());
         assertTrue(page3.size()== 4);
-
     }
 
     @Test
@@ -494,6 +495,7 @@ class NotaneitorApplicationTests {
         //Aceptamos una de ellas
         PO_FriendRequestView.clickAcceptFriendRequest(driver, "//*[@id=\"idTablaListaPeticionesAmistad\"]/tbody/tr[2]/td[3]/form", "id", "idTituloPeticionesAmistadListaUser");
         //Comprobamos que ahora solo hay una
+        driver.navigate().refresh();
         PO_FriendRequestView.checkNumberOfFriendRequest(driver,1);
     }
 
