@@ -21,8 +21,8 @@ module.exports = function (app, usersRepository) {
 
                 })
             }
-            let lastPage = friends.length / 4;
-            if (friends.length % 4 > 0) { // Sobran decimales
+            let lastPage = friends.length / 5;
+            if (friends.length % 5 > 0) { // Sobran decimales
                 lastPage = lastPage + 1;
             }
             let pages = []; // paginas mostrar
@@ -62,8 +62,8 @@ module.exports = function (app, usersRepository) {
 
                 })
             }
-            let lastPage = friendRequests.length / 4;
-            if (friendRequests.length % 4 > 0) { // Sobran decimales
+            let lastPage = friendRequests.length / 5;
+            if (friendRequests.length % 5 > 0) { // Sobran decimales
                 lastPage = lastPage + 1;
             }
             let pages = []; // paginas mostrar

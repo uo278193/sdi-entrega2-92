@@ -62,7 +62,7 @@ module.exports = {
     },
     getUsers: async function (filter, options,page) {
         try {
-            const limit = 4;
+            const limit = 5;
             const client = await this.mongoClient.connect(this.app.get('connectionStrings'));
             const database = client.db("sdistagram");
             const collectionName = 'users';

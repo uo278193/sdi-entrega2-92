@@ -19,9 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class NotaneitorApplicationTests {
     static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
     // Rosa
-    static String Geckodriver = "C:\\Users\\rosa_\\Documents\\Uni\\3º\\Segundo cuatri\\SDI\\Lab\\sesion05\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
+  //  static String Geckodriver = "C:\\Users\\rosa_\\Documents\\Uni\\3º\\Segundo cuatri\\SDI\\Lab\\sesion05\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
     // David
-//    static String Geckodriver = "C:\\Users\\david\\OneDrive\\Documentos\\SDI21-22\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
+    static String Geckodriver = "C:\\Users\\david\\OneDrive\\Documentos\\SDI21-22\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
     //Mateo
 //    static String Geckodriver ="C:\\Users\\User\\Desktop\\TERCERO\\SDI\\sesion06\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
     // Geckodriver María
@@ -323,17 +323,17 @@ class NotaneitorApplicationTests {
         //Rellenamos el formulario
         PO_LoginView.fillLoginForm(driver, "user01@email.com", "user01");
         //Se comprueba que ha hecho login
-        String checkText = "Usuarios";
-        List<WebElement> result = PO_View.checkElementBy(driver, "id", "idUsuariosListaUser");
+        String checkText = "Bienvenido: user01@email.com";
+        List<WebElement> result = PO_View.checkElementBy(driver, "id", "idInicio");
         Assertions.assertEquals(checkText, result.get(0).getText());
         //Hacemos click en el listado de usuarios
-        PO_HomeView.clickOption(driver, "/user/show", "id", "idUsuariosListaUser");
+        PO_HomeView.clickOption(driver, "/users/list", "id", "users");
         // Comprobamos todos los usuarios
-        PO_PrivateView.checkUser(driver, "user02Name");
-        PO_PrivateView.checkUser(driver, "user03Name");
-        PO_PrivateView.checkUser(driver, "user04Name");
-        PO_PrivateView.checkUser(driver, "user05Name");
-        PO_PrivateView.checkUser(driver, "user06Name");
+        PO_PrivateView.checkUser(driver, "user02@email.com");
+        PO_PrivateView.checkUser(driver, "user03@email.com");
+        PO_PrivateView.checkUser(driver, "user04@email.com");
+        PO_PrivateView.checkUser(driver, "user05@email.com");
+        PO_PrivateView.checkUser(driver, "user06@email.com");
     }
     // Envía una invitación de amistad a un usuario
     @Test
@@ -385,11 +385,11 @@ class NotaneitorApplicationTests {
         //Rellenamos el formulario
         PO_LoginView.fillLoginForm(driver, "user01@email.com", "user01");
         //Se comprueba que ha hecho login
-        String checkText = "Usuarios";
-        List<WebElement> result = PO_View.checkElementBy(driver, "id", "idUsuariosListaUser");
+        String checkText = "Bienvenido: user01@email.com";
+        List<WebElement> result = PO_View.checkElementBy(driver, "id", "idInicio");
         Assertions.assertEquals(checkText, result.get(0).getText());
         //Hacemos click en el listado de usuarios
-        PO_HomeView.clickOption(driver, "/user/menuBusqueda", "id", "idUsuariosMenuBusquedaUser");
+        PO_HomeView.clickOption(driver, "/users/list", "id", "users");
 
         // Estando en el menu buscamos sin rellenar el campo de texto
         PO_SearchView.fillForm(driver,"");
@@ -456,19 +456,24 @@ class NotaneitorApplicationTests {
     @Test
     @Order(21)
     public void PR21() {
+
+
         //Vamos al formulario de logueo.
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
         //Rellenamos el formulario
-        PO_LoginView.fillLoginForm(driver, "user01@email.com", "user01");
+        PO_LoginView.fillLoginForm(driver, "user09@email.com", "user09");
         //Se comprueba que ha hecho login
-        String checkText = "Usuarios";
-        List<WebElement> result = PO_View.checkElementBy(driver, "id", "idUsuariosListaUser");
+        String checkText = "Bienvenido: user09@email.com";
+        List<WebElement> result = PO_View.checkElementBy(driver, "id", "idInicio");
         Assertions.assertEquals(checkText, result.get(0).getText());
-        //Hacemos click en el listado de invitaciones de amistad
-        PO_HomeView.clickOption(driver, "/user/friendRequest/list", "id", "idTituloPeticionesAmistadListaUser");
-        //Comprobamos varios de los usuarios de las peticiones
-        PO_PrivateView.checkUser(driver,"user05Name user05LastName");
-        PO_PrivateView.checkUser(driver,"user06Name user06LastName");
+        //vamos al apartado de friendRequests
+        PO_HomeView.clickOption(driver, "/user/friendRequests", "id", "friendRequests");
+        //user09 tiene invitaciones de user10 y user11
+        PO_PrivateView.checkUser(driver, "user10");
+        PO_PrivateView.checkUser(driver, "user11");
+
+
+
     }
     @Test
     @Order(22)
