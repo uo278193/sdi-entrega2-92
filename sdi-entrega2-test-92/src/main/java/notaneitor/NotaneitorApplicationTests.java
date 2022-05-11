@@ -773,6 +773,8 @@ class NotaneitorApplicationTests {
 
     }
 
+    // Parte 2B - Cliente - Aplicación jQuery
+
     @Test
     @Order(32)
     public void PR32() {
@@ -784,13 +786,12 @@ class NotaneitorApplicationTests {
         String checkText = "Usuarios";
         List<WebElement> result = PO_View.checkElementBy(driver, "id", "idUsuariosListaUser");
         Assertions.assertEquals(checkText, result.get(0).getText());
-        driver.navigate().to("http://localhost:8090/admin/viewLogs");
+        driver.navigate().to("http://localhost:8081/admin/viewLogs");
         checkText = "Forbidden";
         result = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, result.get(0).getText());
 
     }
-
 
     @Test
     @Order(33)
