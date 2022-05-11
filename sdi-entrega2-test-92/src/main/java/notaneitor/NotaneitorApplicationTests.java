@@ -6,7 +6,6 @@ import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.springframework.boot.test.context.SpringBootTest;
 
 
 import java.util.ArrayList;
@@ -18,12 +17,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 //Ordenamos las pruebas por la anotación @Order de cada método
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class NotaneitorApplicationTests {
-    //Para MACOSX
-    //static String PathFirefox = "/Applications/Firefox 2.app/Contents/MacOS/firefox-bin";
-    //static String Geckodriver = "/Users/delacal/selenium/geckodriver-v0.30.0-macos";
-    //Para Windows
-    static String Geckodriver = "C:\\Users\\david\\OneDrive\\Documentos\\SDI21-22\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
     static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
+    // Rosa
+    static String Geckodriver = "C:\\Users\\rosa_\\Documents\\Uni\\3º\\Segundo cuatri\\SDI\\Lab\\sesion05\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
+    // David
+//    static String Geckodriver = "C:\\Users\\david\\OneDrive\\Documentos\\SDI21-22\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
+    //Mateo
+//    static String Geckodriver ="C:\\Users\\User\\Desktop\\TERCERO\\SDI\\sesion06\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
+    // Geckodriver María
+    //static String Geckodriver = "C:\\Program Files\\geckodriver-v0.30.0-win64.exe";
+    //Miguel
+    //static String Geckodriver ="C:\\Users\\migue\\OneDrive\\Documentos\\Uniovi\\Tercero segundo cuatri\\SDI\\Practica\\geckodriver-v0.30.0-win64.exe";
 
     //Común a Windows y a MACOSX
     static final String URL = "http://localhost:8081";
@@ -68,10 +72,10 @@ class NotaneitorApplicationTests {
         //Vamos al formulario de registro
         PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
         //Rellenamos el formulario.
-        PO_SignUpView.fillForm(driver, "prueba1", "Josefo", "Perez", "77777", "77777");
-        //Comprobamos que entramos en la sección privada y nos nuestra el texto a buscar
-        String checkText = "Usuarios";
-        List<WebElement> result = PO_View.checkElementBy(driver, "id", "idUsuariosListaUser");
+        PO_SignUpView.fillForm(driver, "prueba1@email.com", "Josefo", "Perez", "77777", "77777");
+        //Comprobamos que se notifica el registro.
+        String checkText = "Nuevo usuario registrado.";
+        List<WebElement> result = PO_View.checkElementBy(driver, "class", "alert alert-info");
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
 
@@ -82,15 +86,10 @@ class NotaneitorApplicationTests {
     void PR02() {
         PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
         PO_SignUpView.fillForm(driver, "", "", "", "77777", "77777");
-        //Comprobamos los errores de email vacio, nombre vacío y apellidos vacío.
-        List<WebElement> result = PO_SignUpView.checkElementByKey(driver, "Error.email.empty", PO_Properties.getSPANISH());
-        String checkText = PO_HomeView.getP().getString("Error.email.empty", PO_Properties.getSPANISH());
-        Assertions.assertEquals(checkText, result.get(0).getText());
-        result = PO_SignUpView.checkElementByKey(driver, "Error.name.empty", PO_Properties.getSPANISH());
-        checkText = PO_HomeView.getP().getString("Error.name.empty", PO_Properties.getSPANISH());
-        Assertions.assertEquals(checkText, result.get(0).getText());
-        result = PO_SignUpView.checkElementByKey(driver, "Error.surname.empty", PO_Properties.getSPANISH());
-        checkText = PO_HomeView.getP().getString("Error.surname.empty", PO_Properties.getSPANISH());
+        // En este caso, comprobamos que no se ha registrado el usuario y no se redirige a otra página;
+        // ya que los campos son requeridos
+        String checkText = "";
+        List<WebElement> result = PO_View.checkElementBy(driver, "id", "nombre");
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
 
@@ -100,10 +99,10 @@ class NotaneitorApplicationTests {
     @Order(3)
     void PR03() {
         PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
-        PO_SignUpView.fillForm(driver, "99999990B", "Jose", "Perez", "77777", "44444");
-        List<WebElement> result = PO_SignUpView.checkElementByKey(driver, "Error.signup.passwordConfirm.coincidence", PO_Properties.getSPANISH());
+        PO_SignUpView.fillForm(driver, "jose@email.com", "Jose", "Perez", "77777", "44444");
         //Comprobamos el error de contraseña repetida inválida
-        String checkText = PO_HomeView.getP().getString("Error.signup.passwordConfirm.coincidence", PO_Properties.getSPANISH());
+        String checkText = "Las contraseñas no coinciden";
+        List<WebElement> result = PO_View.checkElementBy(driver, "class", "alert alert-danger");
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
 
@@ -114,9 +113,9 @@ class NotaneitorApplicationTests {
     public void PR04() {
         PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
         PO_SignUpView.fillForm(driver, "user01@email.com", "Pedro", "Lopez", "77777", "77777");
-        List<WebElement> result = PO_SignUpView.checkElementByKey(driver, "Error.signup.email.duplicate", PO_Properties.getSPANISH());
         //Comprobamos el error de email duplicado.
-        String checkText = PO_HomeView.getP().getString("Error.signup.email.duplicate", PO_Properties.getSPANISH());
+        String checkText = "Este email ya está en uso";
+        List<WebElement> result = PO_View.checkElementBy(driver, "class", "alert alert-danger");
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
 
@@ -130,7 +129,7 @@ class NotaneitorApplicationTests {
         PO_LoginView.fillLoginForm(driver, "admin@email.com", "admin");
         //Comprobamos que puede ver los usuarios
         String checkText = "Usuarios";
-        List<WebElement> result = PO_View.checkElementBy(driver, "id", "idTitleAdminListUser");
+        List<WebElement> result = PO_View.checkElementBy(driver, "id", "users");
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
 
@@ -142,9 +141,9 @@ class NotaneitorApplicationTests {
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
         //Rellenamos el formulario
         PO_LoginView.fillLoginForm(driver, "user01@email.com", "user01");
-        //Comprobamos que entramos en la sección privada y nos nuestra el texto a buscar
-        String checkText = "Usuarios";
-        List<WebElement> result = PO_View.checkElementBy(driver, "id", "idUsuariosListaUser");
+        //Comprobamos que podemos ver sus amigos
+        String checkText = "Amigos";
+        List<WebElement> result = PO_View.checkElementBy(driver, "id", "friends");
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
 
@@ -157,7 +156,7 @@ class NotaneitorApplicationTests {
         //Rellenamos el formulario
         PO_LoginView.fillLoginForm(driver, "", "");
         //Comprobamos que no se ha iniciado sesión
-        String checkText = "Identifícate";
+        String checkText = "Identificación de usuario";
         List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
@@ -170,9 +169,9 @@ class NotaneitorApplicationTests {
         //Vamos al formulario de logueo.
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
         //Rellenamos el formulario
-        PO_LoginView.fillLoginForm(driver, "user1", "22222");
+        PO_LoginView.fillLoginForm(driver, "user01@email.com", "22222");
         //Comprobamos que no se ha iniciado sesión
-        String checkText = "Identifícate";
+        String checkText = "Identificación de usuario";
         List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
