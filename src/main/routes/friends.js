@@ -103,19 +103,19 @@ module.exports = function (app, usersRepository) {
                 usersRepository.findUser(filter2, options).then(user2 => {
                         //Comprobar que exista la friendRequest
                         let existeFriendRequest = false
-                        for (request in userSession.friendRequests) {
-                            if (request.toString() == user2._id.toString()) {
+                        for (var i = 0; i < userInSession.friendRequests.length; i++) {
+                            if (userInSession.friendRequests[i].toString() == user2._id.toString()) {
                                 existeFriendRequest = true;
                             }
                         }
                         let existeAmistad = false
-                        for (friendship in userSession.friends) {
-                            if (friendship.toString() == user2._id.toString()) {
+                        for (var i = 0; i < userInSession.friends.length; i++) {
+                            if (userInSession.friends[i].toString() == user2._id.toString()) {
                                 existeAmistad = true;
                             }
                         }
-                        for (friendship in user2.friends) {
-                            if (friendship.toString() == userInSession._id.toString()) {
+                        for (var i = 0; i < user2.friends.length; i++) {
+                            if (user2.friends[i].toString() == userInSession._id.toString()) {
                                 existeAmistad = true;
                             }
                         }

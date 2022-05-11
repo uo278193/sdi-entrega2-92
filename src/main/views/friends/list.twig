@@ -3,7 +3,6 @@
 {% block main_container %}
     <h2>Listado de Amigos</h2>
     <div class="row">
-        <!-- http://librosweb.es/libro/bootstrap_3/capitulo_2/tipos_de_rejillas.html -->
         <div class="table-responsive">
             <table class="table table-hover" id="tableShowUsers">
                 <thead>
@@ -16,12 +15,18 @@
                 </thead>
                 <tbody>
                 {% for friend in friends %}
-                    <tr>
-                        <td scope="row">{{ friend.email }}</td>
-                        <td scope="row">{{ friend.nombre }}</td>
-                        <td scope="row">{{ friend.apellidos }}</td>
-                    </tr>
-                {% endfor %}
+
+
+                        <tr>
+                            <td scope="row">{{ friend.email }}</td>
+
+                            <td scope="row"> <a href="/posts/{{ friend.email }}">{{ friend.nombre }}  </a></td>
+
+                            <td scope="row">{{ friend.apellidos }}</td>
+                        </tr>
+
+
+                        {% endfor %}
                 </tbody>
             </table>
 
