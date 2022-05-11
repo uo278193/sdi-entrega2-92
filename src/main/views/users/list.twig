@@ -36,7 +36,7 @@
                     <td scope="row">{{ user.email }}</td>
                     <td scope="row">{{ user.nombre }}</td>
                     <td scope="row">{{ user.apellidos }}</td>
-                    <td scope="row">
+
                         {% set mostrarBoton=true%}
                         {% for id in user.friends %}
                              {% if(id==userInSessionId) %}
@@ -50,9 +50,11 @@
                             {% endif %}
                         {% endfor %}
                         {% if mostrarBoton==true %}
+                        <td scope="row">
                              <form action={{'/user/sendFriendRequest/'~user._id}} method="post">
                                 <input type="submit" class="btn btn-primary btnSendFR" value="Enviar petición de amistad" >
                              </form>
+                         </td>
                         {% endif %}
                    </td>
                </tr>

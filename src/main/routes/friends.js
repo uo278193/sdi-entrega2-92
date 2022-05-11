@@ -171,11 +171,11 @@ module.exports = function (app, usersRepository) {
                     if (userInSession._id.toString() === req.params.id) {
                         esUsuario = true;
                     }
-                    user.friendRequests.forEach(friendRequest => {
-                        if (friendRequest.toString() === userInSession._id.toString()) {
+                    for (var i = 0; i < user.friendRequests.length; i++) {
+                        if (user.friendRequests[i].toString() == userInSession._id.toString()) {
                             duplicado = true;
                         }
-                    })
+                    }
                     if (duplicado) {
                         res.redirect("/users/list" +
                             "?message=Una petición de amistad ya había sido enviada" +
