@@ -121,6 +121,8 @@ module.exports = function (app, usersRepository) {
 
     app.get('/users/logout', function (req, res) {
         req.session.user = null;
-        res.send("El usuario se ha desconectado correctamente");
+        res.redirect("/users/login" +
+            "?message=Usuario desconectado" +
+            "&messageType=alert-info ");
     });
 }
