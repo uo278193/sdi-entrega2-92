@@ -25,7 +25,7 @@ class NotaneitorApplicationTests {
    // static String Geckodriver = "C:\\Users\\david\\OneDrive\\Documentos\\SDI21-22\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
 
     //mateo
-    static String Geckodriver = "C:\\Users\\User\\Desktop\\TERCERO\\SDI\\sesion06\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
+    static String Geckodriver = "C:\\Users\\Mateg\\Desktop\\TERCERO\\SDI\\sesion06\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
     static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
 
     //Común a Windows y a MACOSX
@@ -516,7 +516,7 @@ class NotaneitorApplicationTests {
         //Vamos al formulario de logueo.
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
         //Rellenamos el formulario
-        PO_LoginView.fillLoginForm(driver, "test24@test24.com", "test24");
+        PO_LoginView.fillLoginForm(driver, "user07@email.com", "user07");
         //Se comprueba que ha hecho login
        /* String checkText = "Usuarios";
         List<WebElement> result = PO_View.checkElementBy(driver, "id", "idUsuariosListaUser");
@@ -556,42 +556,34 @@ class NotaneitorApplicationTests {
         //Vamos al formulario de logueo.
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
         //Rellenamos el formulario
-        PO_LoginView.fillLoginForm(driver, "user02@email.com", "user02");
+        PO_LoginView.fillLoginForm(driver, "user07@email.com", "user07");
         //Se comprueba que ha hecho login
-        String checkText = "Usuarios";
+       /* String checkText = "Usuarios";
         List<WebElement> result = PO_View.checkElementBy(driver, "id", "idUsuariosListaUser");
         Assertions.assertEquals(checkText, result.get(0).getText());
-
-        //vamos a la pagina con las publicaciones
-        List<WebElement> elements = PO_View.checkElementBy(driver, "free", "//li[contains(@id,'post-menu')]");
-        elements.get(0).click();
-
-        //vamos a la pagina con las publicaciones
-        List<WebElement> elements2 = PO_View.checkElementBy(driver, "free", "//a[contains(@id,'btnListPost')]");
-        elements2.get(0).click();
-        List<WebElement> friendsList = SeleniumUtils.waitLoadElementsBy(driver, "free", "//tbody/tr", PO_View.getTimeout());
-        int sizeOriginal = friendsList.size();
-
-        //volvemos a crear
-        List<WebElement> elements4 = PO_View.checkElementBy(driver, "free", "//li[contains(@id,'post-menu')]");
-        elements4.get(0).click();
-
-
-        //vamos a la pagina de crear las publicaciones
-        List<WebElement> elements1 = PO_View.checkElementBy(driver, "free", "//a[contains(@id,'btnNewPost')]");
+        */
+        //vamos a mis post y los contamos
+        List<WebElement> elements1 =  PO_View.checkElementBy(driver, "free",  "//li[contains(@id,'myPosts')]");
         elements1.get(0).click();
-        //rellenamos form e intentamos crear
-        PO_PostView.fillForm(driver, "Prueba", "");
+        List<WebElement> myPosts = SeleniumUtils.waitLoadElementsBy(driver, "free", "//div//div/a", PO_View.getTimeout());
+        int sizeOriginal = myPosts.size();
+        driver.navigate().to(URL + "");
+        //vamos a la pagina de añadir post
+        List<WebElement> elements2 =  PO_View.checkElementBy(driver, "free",  "//li[contains(@id,'addPosts')]");
+        elements2.get(0).click();
+        //rellenamos el formulario de post
+        PO_PostView.fillForm(driver, "", "test24");
+        //vamos a la pagina con las publicaciones
 
-        //Comprobamos que que no creo ningun post
-        List<WebElement> elements5 = PO_View.checkElementBy(driver, "free", "//li[contains(@id,'post-menu')]");
-        elements5.get(0).click();
-        List<WebElement> elements6 = PO_View.checkElementBy(driver, "free", "//a[contains(@id,'btnListPost')]");
-        elements6.get(0).click();
+        //vamos a mis post y los contamos
+        List<WebElement> elements3 =  PO_View.checkElementBy(driver, "free",  "//li[contains(@id,'myPosts')]");
+        elements3.get(0).click();
+        List<WebElement> myPosts2 = SeleniumUtils.waitLoadElementsBy(driver, "free", "//div//div/a", PO_View.getTimeout());
+        int sizeDespues = myPosts2.size();
 
-        List<WebElement> friendsListAfter = SeleniumUtils.waitLoadElementsBy(driver, "free", "//tbody/tr", PO_View.getTimeout());
-        Assertions.assertEquals(sizeOriginal , friendsListAfter.size());
 
+        //Comprobamos q no se añadio ningun post
+        Assertions.assertEquals(sizeOriginal , sizeDespues);
 
 
     }
@@ -601,24 +593,18 @@ class NotaneitorApplicationTests {
         //Vamos al formulario de logueo.
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
         //Rellenamos el formulario
-        PO_LoginView.fillLoginForm(driver, "user02@email.com", "user02");
-        //Se comprueba que ha hecho login
-        String checkText = "Usuarios";
-        List<WebElement> result = PO_View.checkElementBy(driver, "id", "idUsuariosListaUser");
-        Assertions.assertEquals(checkText, result.get(0).getText());
+        PO_LoginView.fillLoginForm(driver, "user07@email.com", "user07");
 
-        //vamos a la pagina con las publicaciones
-        List<WebElement> elements =  PO_View.checkElementBy(driver, "free",  "//li[contains(@id,'post-menu')]");
-        elements.get(0).click();
 
-        //vamos a la pagina con las publicaciones
-        List<WebElement> elements1 =  PO_View.checkElementBy(driver, "free",  "//a[contains(@id,'btnListPost')]");
-        elements1.get(0).click();
+        //vamos a mis post y los contamos
+        List<WebElement> elements3 =  PO_View.checkElementBy(driver, "free",  "//li[contains(@id,'myPosts')]");
+        elements3.get(0).click();
+        List<WebElement> myPosts2 = SeleniumUtils.waitLoadElementsBy(driver, "free", "//div//div/a", PO_View.getTimeout());
+        int sizeDespues = myPosts2.size();
 
-        //Comprobamos que hay 3
 
-        List<WebElement> page1 =  SeleniumUtils.waitLoadElementsBy(driver,"free", "//tbody/tr",PO_View.getTimeout());
-        assertTrue(page1.size()== 3);
+        //Comprobamos q no se añadio ningun post
+        Assertions.assertEquals(2 , sizeDespues);
 
     }
 
@@ -631,22 +617,19 @@ class NotaneitorApplicationTests {
         //Vamos al formulario de logueo.
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
         //Rellenamos el formulario
-        PO_LoginView.fillLoginForm(driver, "user01@email.com", "user01");
-        //Se comprueba que ha hecho login
-        String checkText = "Usuarios";
-        List<WebElement> result = PO_View.checkElementBy(driver, "id", "idUsuariosListaUser");
-        Assertions.assertEquals(checkText, result.get(0).getText());
-        //Hacemos click en el listado de amigos y comprobamos que entramos
-        PO_HomeView.clickOption(driver, "/user/friends", "id", "idTituloAmigosFriends");
-        //Hacemos click en el user02 amigo y comprobamos sus post
-        PO_HomeView.clickOption(driver, "/post/friends/5", "id", "idListPostsFriends");
-        checkText = "Prueba1";
-        result = PO_View.checkElementBy(driver, "text", checkText);
-        Assertions.assertEquals(checkText, result.get(0).getText());
+        PO_LoginView.fillLoginForm(driver, "user08@email.com", "user08");
 
-        checkText = "Prueba2";
-        result = PO_View.checkElementBy(driver, "text", checkText);
-        Assertions.assertEquals(checkText, result.get(0).getText());
+
+        //vamos a mis post y los contamos
+        List<WebElement> elements3 =  PO_View.checkElementBy(driver, "free",  "//li[contains(@id,'friends')]");
+        elements3.get(0).click();
+
+
+        PO_View.checkElementBy(driver,"id","linkNombre").get(0).click();
+        List<WebElement> myPosts2 = SeleniumUtils.waitLoadElementsBy(driver, "free", "//div//div/a", PO_View.getTimeout());
+        int sizeDespues = myPosts2.size();
+        //Comprobamos q no se añadio ningun post
+        Assertions.assertEquals(2 , sizeDespues);
 
     }
 
