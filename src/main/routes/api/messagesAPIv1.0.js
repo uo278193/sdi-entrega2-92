@@ -105,14 +105,13 @@ module.exports = function (app, usersRepository, messagesRepository) {
         }
     });
 
-    app.get("/api/v1.0/messages/:id", function (req, res) {
+    app.get("/api/v1.0/user/:id/messages/", function (req, res) {
         try {
-            let userEmail = req.user.email;
+            let userEmail = req.session.user;
             let options = {};
-            let friendEmail = usersRepository.findUser(filter= {_id: ObjectId(req.params.id)}, options).email;
+            let friendEmail = usersRepository.findUser({_id: ObjectId(req.params.id)}, options).email;
             let filter = {receptor: userEmail, emisor: friendEmail};
             messagesRepository.getMessages(filter, options).then(messages => {
-                let response = messages
                 if (messages == null) {
                     res.status(404);
                     res.json({error: "ID inválido o no existe"})
@@ -125,19 +124,18 @@ module.exports = function (app, usersRepository, messagesRepository) {
                             res.json({error: "ID inválido o no existe"})
                         } else {
                             res.status(200);
-                            response.add(messages2);
+                            let response={"mensajesEmisor":messages,"mensajesReceptor":messages2}
                         }
-                    }).catch(error => {
-                        res.status(500);
-                        res.json({error: "Se ha producido un error al recuperar el mensaje."})
-                    });
+                    })
                     res.json({messages: response})
                 }
             }).catch(error => {
+                console.log("llega2")
                 res.status(500);
                 res.json({error: "Se ha producido un error al recuperar el mensaje."})
             });
         } catch (e) {
+            console.log("llega3")
             res.status(500);
             res.json({error: "Se ha producido un error :" + e})
         }
