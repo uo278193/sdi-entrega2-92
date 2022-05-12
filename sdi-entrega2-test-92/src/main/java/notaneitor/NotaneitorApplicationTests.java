@@ -1,6 +1,7 @@
 package notaneitor;
 
 import notaneitor.pageobjects.*;
+import notaneitor.util.MongoUtils;
 import notaneitor.util.SeleniumUtils;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
@@ -22,7 +23,7 @@ class NotaneitorApplicationTests {
     //static String PathFirefox = "/Applications/Firefox 2.app/Contents/MacOS/firefox-bin";
     //static String Geckodriver = "/Users/delacal/selenium/geckodriver-v0.30.0-macos";
     //Para Windows
-    static String Geckodriver = "C:\\Users\\david\\OneDrive\\Documentos\\SDI21-22\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
+    //static String Geckodriver = "C:\\Users\\david\\OneDrive\\Documentos\\SDI21-22\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
     static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
     // Rosa
   //  static String Geckodriver = "C:\\Users\\rosa_\\Documents\\Uni\\3º\\Segundo cuatri\\SDI\\Lab\\sesion05\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
@@ -31,9 +32,9 @@ class NotaneitorApplicationTests {
     //Mateo
 //    static String Geckodriver ="C:\\Users\\User\\Desktop\\TERCERO\\SDI\\sesion06\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
     // Geckodriver María
-    //static String Geckodriver = "C:\\Program Files\\geckodriver-v0.30.0-win64.exe";
+    static String Geckodriver = "C:\\Program Files\\geckodriver-v0.30.0-win64.exe";
     //Miguel
-    static String Geckodriver ="C:\\Users\\migue\\OneDrive\\Documentos\\Uniovi\\Tercero segundo cuatri\\SDI\\Practica\\geckodriver-v0.30.0-win64.exe";
+    //static String Geckodriver ="C:\\Users\\migue\\OneDrive\\Documentos\\Uniovi\\Tercero segundo cuatri\\SDI\\Practica\\geckodriver-v0.30.0-win64.exe";
 
     //Común a Windows y a MACOSX
     static final String URL = "http://localhost:8081";
@@ -649,6 +650,7 @@ class NotaneitorApplicationTests {
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
 
+
     @Test
     @Order(30)
     public void PR29() {
@@ -676,18 +678,20 @@ class NotaneitorApplicationTests {
     @Test
     @Order(32)
     public void PR31() {
-        //Vamos al formulario de logueo.
-        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
-        //Rellenamos el formulario como un usuario estandar
-        PO_LoginView.fillLoginForm(driver, "user01@email.com", "user01");
-        //Se intenta acceder a la lista de amigos de otro usuario
-        driver.navigate().to("http://localhost:8081/admin/viewLogs");
-        String checkText = "Forbidden";
+        /*
+            Este punto no hemos podido comprobarlo ya que un usuario tan solo puede acceder a su propio listado de amigos.
+            La ruta que muestra los amigos de un usuario es /user/friends y no /user/friends/:id. El listado se muestra siempre
+            de los amigos del usuario en sesión por lo que no podrá acceder ningún usuario a un listado que no sea el suyo.
+
+            Como comprobación adicional, probaremos que un usuario no logeado no puede acceder al listado de amigos
+         */
+        driver.navigate().to("http://localhost:8081/user/friends");
+        //Comprobamos que estamos en el formulario de login
+        String checkText = "Identificacion de usuario";
         List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, result.get(0).getText());
 
     }
-
 
     @Test
     @Order(33)
