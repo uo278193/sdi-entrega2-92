@@ -12,25 +12,41 @@
             </div>
         </div>
         <div class="col-sm-offset-2 col-sm-10">
-            <button type="button" class="btn btn-primary" id="boton-add"
-                    onclick="widgetAddMessage()">Nuevo mensaje
-            </button>
+            <button type="button" id="boton-add">Nuevo mensaje</button>
         </div>
     </div>
 </div>
 <script>
-    var messages;
+    $("#boton-add").click(function () {
+        console.log(selectedFriendId);
+        $.ajax({
+            url: URLbase + "/messages/add/" + selectedFriendId,
+            type: "POST",
+            data: {
+                texto: $("#text-add").val()
+            },
+            dataType: 'json',
+            headers: {"token": token},
+            success: function (response) {
+                $("#main-container").load("widget-friends.html");
+            },
+          //  error: function (error) {
+          //      $("#main-container").load("widget-login.html");
+          //  }
+        });
+    });
 
     // var interval = 1000;  // 1000 = 1 second
     function loadMessages() {
+        console.log("Load Messages")
         $.ajax({
-            url: URLbase + "/messages/" + selectedFriendId,
+            url: URLbase + "/user/messages/" + selectedFriendId,
             type: "GET",
             data: {},
             dataType: 'json',
             headers: {"token": token},
             success: function (response) {
-                messages = response.messages;
+               let messages = response.messages;
                 updateMessagesTable(messages);
             }, complete: function (data) {
                 // Schedule the next
@@ -46,7 +62,7 @@
     function updateMessagesTable(messages) {
         $("#chat").empty(); // Vaciar la sección
         messages.forEach(message =>{
-            let fecha = message.fecha.format('dd-m-yy');
+            let fecha = new Date(message.fecha).toUTCString();
             let leido;
             if(message.leido){
                 leido = "Leído"
@@ -61,24 +77,8 @@
         })
     }
 
-    function widgetAddMessage( ) {
-        $.ajax({
-            url: URLbase + "/messages/add/" + selectedFriendId,
-            type: "POST",
-            data: {
-                receptor: $("#receptor-add").val(),
-                texto: $("#text-add").val()
-            },
-            dataType: 'json',
-            headers: {"token": token},
-            success: function (response) {
-                $("#main-container").load("widget-friends.html");
-            },
-            error: function (error) {
-                $("#main-container").load("widget-login.html");
-            }
-        });
-    }
+
+
 
     loadMessages();
 </script>

@@ -55,7 +55,7 @@ module.exports = function (app, usersRepository, messagesRepository) {
 
     app.get("/api/v1.0/messages", function (req, res) {
         try {
-            let email = res.user.email;
+            let email = req.session.user;
             let filter = {email: email};
             let options = {};
             usersRepository.getMessages(filter, options).then(friend => {
@@ -78,28 +78,31 @@ module.exports = function (app, usersRepository, messagesRepository) {
 
     app.post('/api/v1.0/messages/add/:id', function (req, res) {
         try {
-            let emisor = res.user.email;
-            let recEmail = (usersRepository.findUser(filter={_id: ObjectId(req.params.id)}, options = {})).email;
-            let message = {
-                emisor: emisor,
-                receptor: recEmail,
-                texto: req.body.texto,
-                leido: false,
-                fecha: Date.now() / 1000 // se manda en segundos
-            }
-            // Validar aquí: título, género, precio y autor.
-            messagesRepository.insertMessage(message, function (messageId) {
-                if (messageId === null) {
-                    res.status(409);
-                    res.json({error: "No se ha podido crear el mensaje. El recurso ya existe."});
-                } else {
-                    res.status(201);
-                    res.json({
-                        message: "Mensaje añadida correctamente.",
-                        _id: messageId
-                    })
+            console.log("HOLA")
+            let emisor = req.session.user;
+            usersRepository.findUser(filter={_id: ObjectId(req.params.id)}, options = {}).then(user=>{
+                let message = {
+                    emisor: emisor,
+                    receptor: user.email,
+                    texto: req.body.texto,
+                    leido: false,
+                    fecha: Date.now() / 1000 // se manda en segundos
                 }
-            });
+                // Validar aquí: título, género, precio y autor.
+                messagesRepository.insertMessage(message, function (messageId) {
+                    if (messageId === null) {
+                        res.status(409);
+                        res.json({error: "No se ha podido crear el mensaje. El recurso ya existe."});
+                    } else {
+                        res.status(201);
+                        res.json({
+                            message: "Mensaje añadida correctamente.",
+                            _id: messageId
+                        })
+                    }
+                });
+
+            })
         } catch (e) {
             res.status(500);
             res.json({error: "Se ha producido un error al intentar crear el mensaje: " + e})
