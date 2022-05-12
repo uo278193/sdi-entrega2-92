@@ -24,27 +24,33 @@ module.exports = function (app, usersRepository, messagesRepository) {
         }
     });
 
-    app.get("/api/v1.0/user/friends", function (req, res) {
-        try {
-            let email = res.user.email;
-            let filter = {email: email};
-            let options = {};
-            usersRepository.getUsersSinPag(filter, options).then(friend => {
-                if (friend === null) {
-                    res.status(404);
-                    res.json({error: "ID inválido o no existe"})
-                } else {
+    app.get("/api/v1.0/user/friends",async function (req, res) {
+
+        let filter = {"email": req.session.user};
+        let options = {};
+        usersRepository.findUser(filter, options).then(user => {
+
+            if (user == null) {
+                res.status(404);
+                res.json({error: "ID inválido o no existe"})
+            } else {
+                let friends = [];
+                usersRepository.findUser(filter, options).then(async user => {
+                    let friendsIds = user.friends;
+                    for (var i = 0; i < friendsIds.length; i++) {
+                        let filterFriend = {"_id": friendsIds[i]};
+                        await usersRepository.findUser(filterFriend, options).then(friendUser => {
+                            friends.push(friendUser);
+                        })
+                    }
                     res.status(200);
-                    res.json({friend: friend})
-                }
-            }).catch(error => {
-                res.status(500);
-                res.json({error: "Se ha producido un error al listar los amigos"})
-            });
-        } catch (e) {
+                    res.json({friends: friends});
+                });
+            }
+        }).catch(error => {
             res.status(500);
-            res.json({error: "Se ha producido un error :" + e})
-        }
+            res.json({error: "Se ha producido un error al listar los amigos"})
+        });
     });
 
     app.get("/api/v1.0/sdigram/messages", function (req, res) {
@@ -78,7 +84,7 @@ module.exports = function (app, usersRepository, messagesRepository) {
                 destinatario: req.body.destinatario,
                 texto: req.body.texto,
                 leído: false,
-                date: Date.now()/1000 // se manda en segundos
+                date: Date.now() / 1000 // se manda en segundos
             }
             // Validar aquí: título, género, precio y autor.
             messagesRepository.insertMessage(message, function (messageId) {
@@ -149,7 +155,7 @@ module.exports = function (app, usersRepository, messagesRepository) {
             res.json({error: "Se ha producido un error al intentar modificar el mensaje: " + e})
         }
     });
-    
+
     app.post('/api/v1.0/users/login', function (req, res) {
         try {
             let securePassword = app.get("crypto").createHmac('sha256', app.get('clave'))
@@ -167,6 +173,7 @@ module.exports = function (app, usersRepository, messagesRepository) {
                         authenticated: false
                     })
                 } else {
+                    req.session.user = user.email;
                     let token = app.get("jwt").sign(
                         {user: user.email, time: Date.now() / 1000}, "secreto"
                     );

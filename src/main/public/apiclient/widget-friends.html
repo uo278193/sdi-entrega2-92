@@ -34,26 +34,36 @@
                 $("#main-container").load("widget-login.html");
             }
         });
-
-        updateFriendsTable(friends);
+        // ordenar por fecha del último mensaje (de mayor a menor)
+        friends.sort(function () {
+        });
     }
 
     // setTimeout(loadFriends, interval);
 
     function updateFriendsTable(friends) {
+
         $("#friendsTableBody").empty(); // Vaciar la tabla
         for (let i = 0; i < friends.length; i++) {
-            var lastMessage = getLastMessage(friends[i].email);
+            $("#friendsTableBody").append(
+                "<tr id=" + friends[i].nombre + ">" +
+                "<td>" + friends[i].nombre + "</td>" +
+                "<td>" + friends[i].apellidos + "</td>"+
 
+                "</tr>")
+            /*var lastMessage = getLastMessage(friends[i].email);*/
+            /*
             $("#friendsTableBody").append(
                 "<tr id=" + friends[i].nombre + ">" +
                 "<td>" + friends[i].apellidos + "</td>" +
                 "<td><a onclick=messageDetail('" + lastMessage._id + "')></a><br>" + lastMessage + "</td>" +
                 "<td>" +
                 "</tr>");
+            */
+
         }
     }
-
+    /*
     function getLastMessage(friend) {
         $.ajax({
             url: URLbase + "/user/messages/" + friend.id,
@@ -86,6 +96,6 @@
         selectedMessageId = _id;
         $("#main-container").load("widget-messages.html");
     }
-
+    */
     loadFriends();
 </script>
