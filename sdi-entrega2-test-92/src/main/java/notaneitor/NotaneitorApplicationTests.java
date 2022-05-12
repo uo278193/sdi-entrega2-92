@@ -61,7 +61,7 @@ class NotaneitorApplicationTests {
         mongo.deleteFriendship("user11@email.com","user09@email.com");
 
         //Cerramos el navegador al finalizar las pruebas
-        //driver.quit();
+        driver.quit();
         mongo.closeClient();
     }
 
@@ -169,7 +169,6 @@ class NotaneitorApplicationTests {
         PO_LoginView.fillLoginForm(driver, "", "");
         //Comprobamos que no se ha iniciado sesión
         String checkText = "Identificación de usuario";
-        SeleniumUtils.waitLoadElementsBy(driver, "text", checkText,  PO_View.getTimeout());
         List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
@@ -185,7 +184,6 @@ class NotaneitorApplicationTests {
         PO_LoginView.fillLoginForm(driver, "user01@email.com", "22222");
         //Comprobamos que no se ha iniciado sesión
         String checkText = "Identificación de usuario";
-        SeleniumUtils.waitLoadElementsBy(driver, "text", checkText,  PO_View.getTimeout());
         List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
