@@ -133,6 +133,7 @@ module.exports = function (app, usersRepository) {
                     "?message=Email o password incorrecto" +
                     "&messageType=alert-danger ");
             } else {
+                app.user = user.email;
                 req.session.user = user.email;
                 if (user.admin) {
                     res.redirect("/admin/users");
@@ -149,6 +150,7 @@ module.exports = function (app, usersRepository) {
     });
 
     app.get('/users/logout', function (req, res) {
+        app.user = null;
         req.session.user = null;
         res.redirect("/users/login" +
             "?message=Usuario desconectado" +

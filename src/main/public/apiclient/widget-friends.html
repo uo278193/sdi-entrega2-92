@@ -47,12 +47,12 @@
     function updateFriendsTable(friends) {
         $("#friendsTableBody").empty(); // Vaciar la tabla
         for (let i = 0; i < friends.length; i++) {
-            var lastMessage = getLastMessage(friends[i]);
+            var lastMessage = getLastMessage(friends[i].email);
 
             $("#friendsTableBody").append(
                 "<tr id=" + friends[i].nombre + ">" +
                 "<td>" + friends[i].apellidos + "</td>" +
-                "<td><a onclick=messageDetail('" + lastMessage._id + "')>Detalles</a><br>" + lastMessage + "</td>" +
+                "<td><a onclick=messageDetail('" + lastMessage._id + "')></a><br>" + lastMessage + "</td>" +
                 "<td>" +
                 "</tr>");
         }
