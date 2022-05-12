@@ -1,16 +1,17 @@
 <div id="widget-messages">
-    <input type="text" class="form-control" placeholder="Buscar mensaje" id="filter-by-name"/>
     <!-- Hacerlo cada segundo automáticamente-->
     <button class="btn" onclick="loadMessages()">Actualizar</button>
+    <section id="chat">
+
+    </section>
 </div>
 <script>
-    window.history.pushState("", "", "/apiclient/client.html?w=messages");
     var messages;
 
     // var interval = 1000;  // 1000 = 1 second
     function loadMessages() {
         $.ajax({
-            url: URLbase + "/messages",
+            url: URLbase + "/messages/" + selectedFriendId,
             type: "GET",
             data: {},
             dataType: 'json',
@@ -30,10 +31,10 @@
     // setTimeout(loadMessages, interval);
 
     function updateMessagesTable(messages) {
-        $("#messagesTableBody").empty(); // Vaciar la tabla
+        $("#chat").empty(); // Vaciar la sección
         for (let i = 0; i < messages.length; i++) {
-            $("#messagesTableBody").append(
-                "<tr id=" + messages[i]._id + ">" +
+            $("#chat").append(
+                "<div id=" + messages[i]._id + ">" +
                 "<td>" + messages[i].title + "</td>" +
                 "<td>" + messages[i].texto + "</td>" +
                 "<td>" + messages[i].fecha + "</td>" +
@@ -41,7 +42,7 @@
                 "<a onclick=songDetail('" + messages[i]._id + "')>Detalles</a><br>" +
                 "<a onclick=songDelete('" + messages[i]._id + "')>Eliminar</a>" +
                 "</td>" +
-                "</tr>");
+                "</div>");
             // Mucho cuidado con las comillas del eliminarCancion
             //la id tiene que ir entre comillas ' '
         }
@@ -67,13 +68,6 @@
     function widgetAddMessage() {
         $("#main-container").load("widget-add.html");
     }
-
-    $('#filter-by-name').on('input', function (e) {
-        let filteredMessages = [];
-        let filterValue = $("#filter-by-name").val();
-        filteredMessages = messages.filter(message => message.text.includes(filterValue));
-        updateMessagesTable(filteredMessages);
-    });
 
     loadMessages();
 </script>

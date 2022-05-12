@@ -86,7 +86,6 @@ require("./routes/users.js")(app, usersRepository);
 require("./routes/admin.js")(app, usersRepository);
 require("./routes/comments.js")(app, commentsRepository);
 require("./routes/posts.js")(app, postsRepository,usersRepository);
-require("./routes/authors.js")(app);
 
 require("./routes/friends.js")(app,usersRepository);
 

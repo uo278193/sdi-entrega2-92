@@ -82,7 +82,7 @@ module.exports = {
             const database = client.db("sdistagram");
             const collectionName = 'users';
             const usersCollection = database.collection(collectionName);
-            return await postsCollection.find(filter, options).toArray();
+            return await usersCollection.find(filter, options).toArray();
         } catch (error) {
             throw (error);
         }

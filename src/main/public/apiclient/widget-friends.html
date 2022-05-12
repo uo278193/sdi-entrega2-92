@@ -13,7 +13,7 @@
     window.history.pushState("", "", "/apiclient/client.html?w=friends");
     var friends;
     var messages;
-    var selectedMessageId;
+    var selectedFriendId;
     // var interval = 1000;  // 1000 = 1 second
 
     function loadFriends() {
@@ -26,9 +26,6 @@
             success: function (response) {
                 friends = response.friends;
                 updateFriendsTable(friends);
-            }, complete: function (data) {
-                // Schedule the next
-                // setTimeout(loadFriends, interval);
             },
             error: function (error) {
                 $("#main-container").load("widget-login.html");
@@ -43,36 +40,37 @@
     function updateFriendsTable(friends) {
         $("#friendsTableBody").empty(); // Vaciar la tabla
         for (let i = 0; i < friends.length; i++) {
-            var lastMessage = getLastMessage(friends[i].email);
-
+            getMessages(friends[i].email);
+            // let text = $val(messages[messages.length -1].texto);
             $("#friendsTableBody").append(
                 "<tr id=" + friends[i].nombre + ">" +
                 "<td>" + friends[i].apellidos + "</td>" +
-                "<td><a onclick=messageDetail('" + lastMessage._id + "')></a><br>" + lastMessage + "</td>" +
-                "<td>" +
+                "<td><a onclick=messagesDetail('" + friends[i]._id + "')></a><br>" + messages[messages.length -1].texto + "</td>" +
                 "</tr>");
         }
     }
 
-    function getLastMessage(friend) {
+    function getMessages(email) {
         $.ajax({
-            url: URLbase + "/user/messages/" + friend.id,
+            url: URLbase + "/user/messages/" + email,
             type: "GET",
             data: {},
             dataType: 'json',
             headers: {"token": token},
             success: function (response) {
-                friends = response.friends;
+                messages = response.messages;
                 updateFriendsTable(friends);
             },
             error: function (error) {
                 $("#main-container").load("widget-login.html");
             }
         });
-        // ordenar por fecha del último mensaje (de mayor a menor)
-        // friends.sort(function () {
-        //
-        // });
+        // ordenar por fecha del último mensaje (de menor a mayor)
+        messages.sort(function (a, b) {
+            if (a.time > b.time) return 1;
+            if (a.time < b.time) return -1;
+            return 0;
+        });
     }
 
     $('#filter-by-name').on('input', function (e) {
@@ -82,8 +80,8 @@
         updateFriendsTable(filteredFriends);
     });
 
-    function messageDetail(_id) {
-        selectedMessageId = _id;
+    function messagesDetail(_id) {
+        selectedFriendId = _id;
         $("#main-container").load("widget-messages.html");
     }
 
