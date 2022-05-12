@@ -90,6 +90,18 @@ public class MongoUtils {
                 user.append("friendRequests", friendRequests);
                 listaUsers.add(user);
             }
+            Document admin = new Document();
+            admin.append("email", "admin@email.com");
+            admin.append("nombre", "admin");
+            admin.append("apellidos", "admin");
+            admin.append("admin", true);
+            admin.append("password", encodePassword("admin"));
+            List<BasicDBObject> friends = new ArrayList<>();
+            admin.append("friends", friends);
+            List<BasicDBObject> friendRequests = new ArrayList<>();
+            admin.append("friendRequests", friendRequests);
+            listaUsers.add(admin);
+
             //Inserting the document into the collection
             //database.getCollection("students").insertOne(document);
             database.getCollection("users").insertMany(listaUsers);
@@ -116,5 +128,35 @@ public class MongoUtils {
                 .returnDocument(ReturnDocument.AFTER);
         result = users.findOneAndUpdate(filter, update, options);
 
+    }
+
+    public void crearPosts() {
+        try {
+            database.createCollection("posts");
+            List<Document> listaPosts = new ArrayList<Document>();
+            for (int j = 1; j < 10; ++j) {
+                for (int i = 1; i < 10; ++i) {
+                    Document post = new Document();
+                    post.append("title", "post" + i + "user0" + j);
+                    post.append("texto", "post" + i + "user0" + j);
+                    post.append("date", "Tue May 10 2022");
+                    post.append("user", "user0" + j);
+                }
+            }
+
+            for (int j = 10; j < 16; ++j) {
+                for (int i = 1; i < 10; ++i) {
+                    Document post = new Document();
+                    post.append("title", "post" + i + "user" + j);
+                    post.append("texto", "post" + i + "user" + j);
+                    post.append("date", "Tue May 10 2022");
+                    post.append("user", "user" + j);
+                }
+            }
+            //Inserting the document into the collection
+            database.getCollection("users").insertMany(listaPosts);
+        } catch (Exception e) {
+
+        }
     }
 }

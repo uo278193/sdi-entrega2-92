@@ -25,13 +25,13 @@ class NotaneitorApplicationTests {
     //static String Geckodriver = "C:\\Users\\david\\OneDrive\\Documentos\\SDI21-22\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
     static String PathFirefox = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
     // Rosa
-    static String Geckodriver = "C:\\Users\\rosa_\\Documents\\Uni\\3º\\Segundo cuatri\\SDI\\Lab\\sesion05\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
+  //  static String Geckodriver = "C:\\Users\\rosa_\\Documents\\Uni\\3º\\Segundo cuatri\\SDI\\Lab\\sesion05\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
     // David
     //static String Geckodriver = "C:\\Users\\david\\OneDrive\\Documentos\\SDI21-22\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
     //Mateo
 //    static String Geckodriver ="C:\\Users\\User\\Desktop\\TERCERO\\SDI\\sesion06\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
     // Geckodriver María
-//    static String Geckodriver = "C:\\Program Files\\geckodriver-v0.30.0-win64.exe";
+    static String Geckodriver = "C:\\Program Files\\geckodriver-v0.30.0-win64.exe";
     //Miguel
     //static String Geckodriver ="C:\\Users\\migue\\OneDrive\\Documentos\\Uniovi\\Tercero segundo cuatri\\SDI\\Practica\\geckodriver-v0.30.0-win64.exe";
 
@@ -52,6 +52,7 @@ class NotaneitorApplicationTests {
     static public void begin() {
         mongo.borrarUsuarios();
         mongo.crearUsuarios();
+        mongo.crearPosts();
     }
 
     //Al finalizar la última prueba
@@ -61,7 +62,7 @@ class NotaneitorApplicationTests {
         mongo.deleteFriendship("user11@email.com","user09@email.com");
 
         //Cerramos el navegador al finalizar las pruebas
-        //driver.quit();
+        driver.quit();
         mongo.closeClient();
     }
 
@@ -168,8 +169,7 @@ class NotaneitorApplicationTests {
         //Rellenamos el formulario
         PO_LoginView.fillLoginForm(driver, "", "");
         //Comprobamos que no se ha iniciado sesión
-        String checkText = "Identificación de usuario";
-        SeleniumUtils.waitLoadElementsBy(driver, "text", checkText,  PO_View.getTimeout());
+        String checkText = "Identificacion de usuario";
         List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
@@ -184,8 +184,7 @@ class NotaneitorApplicationTests {
         //Rellenamos el formulario
         PO_LoginView.fillLoginForm(driver, "user01@email.com", "22222");
         //Comprobamos que no se ha iniciado sesión
-        String checkText = "Identificación de usuario";
-        SeleniumUtils.waitLoadElementsBy(driver, "text", checkText,  PO_View.getTimeout());
+        String checkText = "Identificacion de usuario";
         List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
@@ -198,17 +197,12 @@ class NotaneitorApplicationTests {
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
         //Rellenamos el formulario
         PO_LoginView.fillLoginForm(driver, "user01@email.com", "user01");
-        //Se comprueba que ha hecho login
-        String checkText = "Usuarios";
-        SeleniumUtils.waitLoadElementsBy(driver, "text", checkText,  PO_View.getTimeout());
-        List<WebElement> result = PO_View.checkElementBy(driver, "id", "idUsuariosListaUser");
-        Assertions.assertEquals(checkText, result.get(0).getText());
         //Se desconecta de la sesión
         PO_HomeView.clickOption(driver, "logout", "class", "btn btn-primary");
         //Comprobamos que se ha desconectado
-        String checkText2 = "Identifícate";
-        List<WebElement> result2 = PO_View.checkElementBy(driver, "text", checkText2);
-        Assertions.assertEquals(checkText2, result2.get(0).getText());
+        String checkText = "Identifícate";
+        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, result.get(0).getText());
     }
 
     //Comprobar que el botón cerrar sesión no está visible si el usuario no está autenticado.
