@@ -1,12 +1,12 @@
 package notaneitor;
 
 import notaneitor.pageobjects.*;
-import notaneitor.util.MongoUtils;
 import notaneitor.util.SeleniumUtils;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.springframework.boot.test.context.SpringBootTest;
 
 
 import java.util.ArrayList;
@@ -406,6 +406,7 @@ class NotaneitorApplicationTests {
         //Comprobacion pagina 3 4 elementos
         List<WebElement> page3 =  SeleniumUtils.waitLoadElementsBy(driver,"free", "//tbody/tr",PO_View.getTimeout());
         assertTrue(page3.size()== 4);
+
     }
 
     @Test
@@ -647,132 +648,46 @@ class NotaneitorApplicationTests {
         result = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
-    @Test
-    @Order(29)
-    public void PR29() {
-        //Vamos al formulario de logueo.
-        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
-        //Rellenamos el formulario
-        PO_LoginView.fillLoginForm(driver, "user01@email.com", "user01");
-        //Se comprueba que ha hecho login
-        String checkText = "Usuarios";
-        List<WebElement> result = PO_View.checkElementBy(driver, "id",  "idUsuariosListaUser");
-        Assertions.assertEquals(checkText, result.get(0).getText());
-        //Cambiamos a español
-        PO_NavView.changeLanguage(driver,"btnSpanish");
-        checkText = "Apellidos";
-        result = PO_View.checkElementBy(driver, "text", checkText);
-        Assertions.assertEquals(checkText, result.get(0).getText());
-        //Cambiamos a ingles
-        PO_NavView.changeLanguage(driver,"btnEnglish");
-        checkText = "Surname";
-        result = PO_View.checkElementBy(driver, "text", checkText);
-        Assertions.assertEquals(checkText, result.get(0).getText());
-        //Volvemos a cambiar a español
-        PO_NavView.changeLanguage(driver,"btnSpanish");
-        checkText = "Apellidos";
-        result = PO_View.checkElementBy(driver, "text", checkText);
-        Assertions.assertEquals(checkText, result.get(0).getText());
-
-        //Cambiamos a la vista menu busqueda
-        PO_HomeView.clickOption(driver, "/user/menuBusqueda", "id", "idUsuariosMenuBusquedaUser");
-        //Cambiamos a español
-        PO_NavView.changeLanguage(driver,"btnSpanish");
-        checkText = "Nombre";
-        result = PO_View.checkElementBy(driver, "text", checkText);
-        Assertions.assertEquals(checkText, result.get(0).getText());
-        //Cambiamos a ingles
-        PO_NavView.changeLanguage(driver,"btnEnglish");
-        checkText = "Name";
-        result = PO_View.checkElementBy(driver, "text", checkText);
-        Assertions.assertEquals(checkText, result.get(0).getText());
-        //Cambiamos a español de nuevo
-        PO_NavView.changeLanguage(driver,"btnSpanish");
-        checkText = "Nombre";
-        result = PO_View.checkElementBy(driver, "text", checkText);
-        Assertions.assertEquals(checkText, result.get(0).getText());
-
-        //Cambiamos a la vista friendRequestList
-        PO_HomeView.clickOption(driver, "/user/friendRequest/list", "id", "idTituloPeticionesAmistadListaUser");
-        //Cambiamos a español
-        PO_NavView.changeLanguage(driver,"btnSpanish");
-        checkText = "Nombre";
-        result = PO_View.checkElementBy(driver, "text", checkText);
-        Assertions.assertEquals(checkText, result.get(0).getText());
-        //Cambiamos a ingles
-        PO_NavView.changeLanguage(driver,"btnEnglish");
-        checkText = "Name";
-        result = PO_View.checkElementBy(driver, "text", checkText);
-        Assertions.assertEquals(checkText, result.get(0).getText());
-        //Cambiamos a español de nuevo
-        PO_NavView.changeLanguage(driver,"btnSpanish");
-        checkText = "Nombre";
-        result = PO_View.checkElementBy(driver, "text", checkText);
-        Assertions.assertEquals(checkText, result.get(0).getText());
-
-        //Cambiamos a la vista newPost
-        PO_PostView.postDropdown(driver,"btnNewPost");
-        //Cambiamos a español
-        PO_NavView.changeLanguage(driver,"btnSpanish");
-        checkText = "Título";
-        result = PO_View.checkElementBy(driver, "text", checkText);
-        Assertions.assertEquals(checkText, result.get(0).getText());
-        //Cambiamos a ingles
-        PO_NavView.changeLanguage(driver,"btnEnglish");
-        checkText = "Title";
-        result = PO_View.checkElementBy(driver, "text", checkText);
-        Assertions.assertEquals(checkText, result.get(0).getText());
-        //Cambiamos a español de nuevo
-        PO_NavView.changeLanguage(driver,"btnSpanish");
-        checkText = "Título";
-        result = PO_View.checkElementBy(driver, "text", checkText);
-        Assertions.assertEquals(checkText, result.get(0).getText());
-
-    }
 
     @Test
     @Order(30)
-    public void PR30() {
+    public void PR29() {
         //Escribimos la url en la página sin estar autenticados para listar usuarios
-        driver.navigate().to("http://localhost:8090/user/show");
+        driver.navigate().to("http://localhost:8081/admin/users");
         //Comprobamos que estamos en el formulario de login
-        String checkText = "Inicia sesión";
-        List<WebElement >result = PO_View.checkElementBy(driver, "text", checkText);
+        String checkText = "Identificacion de usuario";
+        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, result.get(0).getText());
 
     }
 
     @Test
     @Order(31)
-    public void PR31() {
+    public void PR30() {
         //Escribimos la url en la página sin estar autenticados para listar invitaciones de amistad
-        driver.navigate().to("http://localhost:8090/user/friendRequest/list");
+        driver.navigate().to("http://localhost:8081/user/friendRequests");
         //Comprobamos que estamos en el formulario de login
-        String checkText = "Inicia sesión";
-        List<WebElement >result = PO_View.checkElementBy(driver, "text", checkText);
+        String checkText = "Identificacion de usuario";
+        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, result.get(0).getText());
 
     }
 
-    // Parte 2B - Cliente - Aplicación jQuery
-
     @Test
     @Order(32)
-    public void PR32() {
+    public void PR31() {
         //Vamos al formulario de logueo.
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
         //Rellenamos el formulario como un usuario estandar
         PO_LoginView.fillLoginForm(driver, "user01@email.com", "user01");
-        //Se comprueba que ha hecho login
-        String checkText = "Usuarios";
-        List<WebElement> result = PO_View.checkElementBy(driver, "id", "idUsuariosListaUser");
-        Assertions.assertEquals(checkText, result.get(0).getText());
+        //Se intenta acceder a la lista de amigos de otro usuario
         driver.navigate().to("http://localhost:8081/admin/viewLogs");
-        checkText = "Forbidden";
-        result = PO_View.checkElementBy(driver, "text", checkText);
+        String checkText = "Forbidden";
+        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, result.get(0).getText());
 
     }
+
 
     @Test
     @Order(33)
