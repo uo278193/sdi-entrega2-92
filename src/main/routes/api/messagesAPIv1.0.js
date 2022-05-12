@@ -1,4 +1,4 @@
-const {ObjectId} = require("mongodb");
+const {ObjectId, Timestamp} = require("mongodb");
 module.exports = function (app, usersRepository, messagesRepository) {
 
     app.get("/api/v1.0/sdigram", function (req, res) {
@@ -86,7 +86,7 @@ module.exports = function (app, usersRepository, messagesRepository) {
                     receptor: user.email,
                     texto: req.body.texto,
                     leido: false,
-                    fecha: Date.now() / 1000 // se manda en segundos
+                    fecha: new Date()
                 }
                 // Validar aquí: título, género, precio y autor.
                 messagesRepository.insertMessage(message, function (messageId) {
@@ -96,7 +96,7 @@ module.exports = function (app, usersRepository, messagesRepository) {
                     } else {
                         res.status(201);
                         res.json({
-                            message: "Mensaje añadida correctamente.",
+                            message: "Mensaje añadido correctamente.",
                             _id: messageId
                         })
                     }

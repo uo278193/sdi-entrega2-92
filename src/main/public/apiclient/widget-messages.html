@@ -62,7 +62,7 @@
     function updateMessagesTable(messages) {
         $("#chat").empty(); // Vaciar la sección
         messages.forEach(message =>{
-            let fecha = new Date(message.fecha).toUTCString();
+            let fecha = message.fecha;
             let leido;
             if(message.leido){
                 leido = "Leído"
