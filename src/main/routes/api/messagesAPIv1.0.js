@@ -26,7 +26,7 @@ module.exports = function (app, usersRepository, messagesRepository) {
 
     app.get("/api/v1.0/user/friends",async function (req, res) {
 
-        let filter = {"email": req.session.user};
+        let filter = {email: req.session.user};
         let options = {};
         usersRepository.findUser(filter, options).then(user => {
 
@@ -76,15 +76,16 @@ module.exports = function (app, usersRepository, messagesRepository) {
         }
     });
 
-    app.post('/api/v1.0/messages', function (req, res) {
+    app.post('/api/v1.0/messages/add/:id', function (req, res) {
         try {
             let emisor = res.user.email;
+            let recEmail = (usersRepository.findUser(filter={_id: ObjectId(req.params.id)}, options = {})).email;
             let message = {
                 emisor: emisor,
-                receptor: req.body.receptor,
+                receptor: recEmail,
                 texto: req.body.texto,
-                leído: false,
-                date: Date.now() / 1000 // se manda en segundos
+                leido: false,
+                fecha: Date.now() / 1000 // se manda en segundos
             }
             // Validar aquí: título, género, precio y autor.
             messagesRepository.insertMessage(message, function (messageId) {
@@ -105,12 +106,12 @@ module.exports = function (app, usersRepository, messagesRepository) {
         }
     });
 
-    app.get("/api/v1.0/messages/:id", function (req, res) {
+    app.get("/api/v1.0/user/messages/:id", function (req, res) {
         try {
-            let userEmail = req.user.email;
+            let userEmail = res.user.email;
             let options = {};
-            let friendEmail = usersRepository.findUser(filter= {_id: ObjectId(req.params.id)}, options).email;
-            let filter = {receptor: userEmail, emisor: friendEmail};
+            let friendEmail = (usersRepository.findUser(filter={_id: ObjectId(req.params.id)}, options)).email;
+            let filter = {emisor: userEmail, receptor: friendEmail};
             messagesRepository.getMessages(filter, options).then(messages => {
                 let response = messages
                 if (messages == null) {
@@ -118,7 +119,7 @@ module.exports = function (app, usersRepository, messagesRepository) {
                     res.json({error: "ID inválido o no existe"})
                 } else {
                     res.status(200);
-                    let filter = {emisor: userEmail, receptor: friendEmail};
+                    let filter = {receptor: userEmail, emisor: friendEmail};
                     messagesRepository.getMessages(filter, options).then(messages2 => {
                         if (messages2 == null) {
                             res.status(404);

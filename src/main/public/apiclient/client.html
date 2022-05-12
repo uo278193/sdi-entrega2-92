@@ -24,7 +24,6 @@
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav" id="barra-menu">
                 <li><a onclick=widgetFriends()>Chats</a></li>
-                <li><a onclick=widgetAddMessage()>Nuevo mensaje</a></li>
             </ul>
         </div>
     </div>
@@ -47,19 +46,12 @@
         if (w == "chats") {
             $("#main-container").load("widget-friends.html");
         }
-        if (w == "add") {
-            $("#main-container").load("widget-add.html");
-        }
     } else {
         $("#main-container").load("widget-friends.html");
     }
 
     function widgetFriends() {
         $("#main-container").load("widget-friends.html");
-    }
-
-    function widgetAddMessage() {
-        $("#main-container").load("widget-add.html");
     }
 </script>
 </body>

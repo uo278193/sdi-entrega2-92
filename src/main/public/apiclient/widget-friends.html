@@ -44,15 +44,32 @@
     function updateFriendsTable(friends) {
 
         $("#friendsTableBody").empty(); // Vaciar la tabla
-        for (let i = 0; i < friends.length; i++) {
-            getMessages(friends[i]._id);
-            $("#friendsTableBody").append(
-                "<tr id=" + friends[i].nombre + ">" +
-                "<td>" + friends[i].nombre + "</td>" +
-                "<td>" + friends[i].apellidos + "</td>" +
-                "<td><a onclick=messagesDetail('" + friends[i]._id + "')></a><br>" + messages[messages.length - 1].texto + "</td>" +
-                "</tr>")
-        }
+        friends.forEach(friend => {
+            getMessages(friend._id);
+            if(messages.length > 0){
+                let text = messages[messages.length - 1].texto;
+                $("#friendsTableBody").append(
+                    "<tr id=" + friends[i].nombre + ">" +
+                    "<td>" + friends[i].nombre + "</td>" +
+                    "<td>" + friends[i].apellidos + "</td>" +
+                    "<td><a onclick=messagesDetail('" + friend._id + "')></a>" + text + "</td>" +
+                    "</tr>")
+            } else if (messages.length == 0){
+                let text = messages[0].texto;
+                $("#friendsTableBody").append(
+                    "<tr id=" + friend.nombre + ">" +
+                    "<td>" + friend.nombre + "</td>" +
+                    "<td>" + friend.apellidos + "</td>" +
+                    "<td><a onclick=messagesDetail('" + friend._id + "')></a>" + text + "</td>" +
+                    "</tr>")
+            } else {
+                $("#friendsTableBody").append(
+                    "<tr id=" + friend._id + ">" +
+                    "<td>" + friend.nombre + "</td>" +
+                    "<td>" + friend.apellidos + "</td>" +
+                    "</tr>")
+            }
+        })
     }
 
     function getMessages(id) {
@@ -64,7 +81,7 @@
             headers: {"token": token},
             success: function (response) {
                 messages = response.messages;
-                updateFriendsTable(friends);
+                // updateFriendsTable(friends);
             },
             error: function (error) {
                 $("#main-container").load("widget-login.html");
