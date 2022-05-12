@@ -45,7 +45,8 @@ class NotaneitorApplicationTests {
     //Antes de la primera prueba
     @BeforeAll
     static public void begin() {
-
+        mongo.borrarUsuarios();
+        mongo.crearUsuarios();
     }
 
     //Al finalizar la última prueba
@@ -53,8 +54,10 @@ class NotaneitorApplicationTests {
     static public void end() {
         //Borramos la amistad entre estos 2 usuarios para que vuelvan a ejecutarese los tests correctamente
         mongo.deleteFriendship("user11@email.com","user09@email.com");
+
         //Cerramos el navegador al finalizar las pruebas
         //driver.quit();
+        mongo.closeClient();
     }
 
     //Antes de cada prueba se navega al URL home de la aplicación
