@@ -637,17 +637,18 @@ class NotaneitorApplicationTests {
         //Vamos al formulario de logueo.
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
         //Rellenamos el formulario
-        PO_LoginView.fillLoginForm(driver, "user01@email.com", "user01");
-        //Se comprueba que ha hecho login
-        String checkText = "Usuarios";
-        List<WebElement> result = PO_View.checkElementBy(driver, "id", "idUsuariosListaUser");
+        PO_LoginView.fillLoginForm(driver, "user08@email.com", "user08");
+
+        driver.navigate().to(URL + "/posts/user04@email.com");
+
+
+
+        //Comprobamos que nos devuelve a la vista cuando no es amigo
+       String checkText = "Post no disponibles";
+        List<WebElement> result = PO_View.checkElementBy(driver, "id",  "postNoDisponibles");
         Assertions.assertEquals(checkText, result.get(0).getText());
-        //Escribimos en la url el id de un usuario no amigo del user01
-        driver.navigate().to("http://localhost:8090/post/friends/10");
-        //Comprobamos que nos devuelve a la vista de amigos
-        checkText = "Tus amigos";
-        result = PO_View.checkElementBy(driver, "text", checkText);
-        Assertions.assertEquals(checkText, result.get(0).getText());
+
+
     }
 
 
