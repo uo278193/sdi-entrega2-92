@@ -29,7 +29,7 @@ module.exports = function (app, usersRepository, messagesRepository) {
             let email = res.user.email;
             let filter = {email: email};
             let options = {};
-            usersRepository.getFriends(filter, options).then(friend => {
+            usersRepository.getUsersSinPag(filter, options).then(friend => {
                 if (friend === null) {
                     res.status(404);
                     res.json({error: "ID inválido o no existe"})

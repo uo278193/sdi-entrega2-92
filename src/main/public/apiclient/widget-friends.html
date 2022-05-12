@@ -1,6 +1,5 @@
 <div id="widget-friends">
     <input type="text" class="form-control" placeholder="Filtrar por nombre" id="filter-by-name"/>
-    <button class="btn" onclick="loadFriends()">Actualizar</button>
     <table class="table table-hover">
         <thead>
         <tr>
@@ -35,10 +34,7 @@
                 $("#main-container").load("widget-login.html");
             }
         });
-        // ordenar por fecha del último mensaje (de mayor a menor)
-        friends.sort(function () {
 
-        });
         updateFriendsTable(friends);
     }
 
@@ -60,7 +56,7 @@
 
     function getLastMessage(friend) {
         $.ajax({
-            url: URLbase + "/user/friends/" + friend.id,
+            url: URLbase + "/user/messages/" + friend.id,
             type: "GET",
             data: {},
             dataType: 'json',
@@ -74,9 +70,9 @@
             }
         });
         // ordenar por fecha del último mensaje (de mayor a menor)
-        friends.sort(function () {
-
-        });
+        // friends.sort(function () {
+        //
+        // });
     }
 
     $('#filter-by-name').on('input', function (e) {
