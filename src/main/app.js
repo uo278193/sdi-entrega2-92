@@ -61,7 +61,7 @@ app.use("/users/list",userSessionRouter);
 app.use("/messages/edit", userAuthorRouter);
 app.use("/messages/delete", userAuthorRouter);
 
-const userTokenRouter = require('./routes/userTokenRouter'); // habrá que cambiarlo
+const userTokenRouter = require('./routes/userTokenRouter');
 app.use("/api/v1.0/sdigram/", userTokenRouter);
 
 app.use("/messages/add", userSessionRouter);

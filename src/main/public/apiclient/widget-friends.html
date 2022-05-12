@@ -15,7 +15,7 @@
     var friends;
     var messages;
     var selectedMessageId;
-    var interval = 1000;  // 1000 = 1 second
+    // var interval = 1000;  // 1000 = 1 second
 
     function loadFriends() {
         $.ajax({
@@ -29,7 +29,7 @@
                 updateFriendsTable(friends);
             }, complete: function (data) {
                 // Schedule the next
-                setTimeout(loadFriends, interval);
+                // setTimeout(loadFriends, interval);
             },
             error: function (error) {
                 $("#main-container").load("widget-login.html");
@@ -42,7 +42,7 @@
         updateFriendsTable(friends);
     }
 
-    setTimeout(loadFriends, interval);
+    // setTimeout(loadFriends, interval);
 
     function updateFriendsTable(friends) {
         $("#friendsTableBody").empty(); // Vaciar la tabla

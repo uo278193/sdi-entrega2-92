@@ -7,7 +7,7 @@
     window.history.pushState("", "", "/apiclient/client.html?w=messages");
     var messages;
 
-    var interval = 1000;  // 1000 = 1 second
+    // var interval = 1000;  // 1000 = 1 second
     function loadMessages() {
         $.ajax({
             url: URLbase + "/messages",
@@ -20,14 +20,14 @@
                 updateMessagesTable(messages);
             }, complete: function (data) {
                 // Schedule the next
-                setTimeout(loadMessages, interval);
+                // setTimeout(loadMessages, interval);
             },
             error: function (error) {
                 $("#main-container").load("widget-login.html");
             }
         });
     }
-    setTimeout(loadMessages, interval);
+    // setTimeout(loadMessages, interval);
 
     function updateMessagesTable(messages) {
         $("#messagesTableBody").empty(); // Vaciar la tabla
