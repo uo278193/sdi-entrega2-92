@@ -40,29 +40,31 @@ module.exports = function (app, usersRepository) {
                     let page = parseInt(req.query.page); // Es String !!!
                     if (typeof req.query.page === "undefined" || req.query.page === null || req.query.page === "0") {
 
-                page = 1;
-            }
-            usersRepository.getUsers(filter, options, page).then(result => {
-                let lastPage = result.total / 5;
-                if (result.total % 5 > 0) { // Sobran decimales
-                    lastPage = lastPage + 1;
-                }
-                let pages = []; // paginas mostrar
-                for (let i = page - 2; i <= page + 2; i++) {
-                    if (i > 0 && i <= lastPage) {
-                        pages.push(i);
+                        page = 1;
                     }
-                }
-                let response = {
-                    users: result.users,
-                    pages: pages,
-                    currentPage: page,
-                    userInSessionId:userInSession._id.toString()
-                }
-                res.render("users/list.twig", response);
-            })
-        }).catch(error => {
-            res.send("Se ha producido un error al listar los usuarios " + error)
+                    usersRepository.getUsers(filter, options, page).then(result => {
+                        let lastPage = result.total / 5;
+                        if (result.total % 5 > 0) { // Sobran decimales
+                            lastPage = lastPage + 1;
+                        }
+                        let pages = []; // paginas mostrar
+                        for (let i = page - 2; i <= page + 2; i++) {
+                            if (i > 0 && i <= lastPage) {
+                                pages.push(i);
+                            }
+                        }
+                        let response = {
+                            users: result.users,
+                            pages: pages,
+                            currentPage: page,
+                            userInSessionId: userInSession._id.toString()
+                        }
+                        res.render("users/list.twig", response);
+                    })
+                }).catch(error => {
+                    res.send("Se ha producido un error al listar los usuarios " + error)
+                });
+            }
         });
     });
 
