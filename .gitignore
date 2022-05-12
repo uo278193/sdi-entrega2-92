@@ -1,3 +1,4 @@
 /src/main/node_modules/
 /target/
 /lib/
+/package-lock.json
