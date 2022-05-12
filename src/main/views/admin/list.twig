@@ -2,11 +2,11 @@
 {% block title %} Usuarios {% endblock %}
 
 {% block main_container %}
-<h2>Usuarios</h2>
+<h2 id="idTitleAdminListUser">Usuarios</h2>
 
 <div class="table-responsive">
     <form action="/admin/users/delete" method="get">
-        <table class="table table-hover" th:fragment="tableUsers" id="tableUsers">
+        <table class="table table-hover" fragment="tableUsers" id="tableUsers">
             <thead>
                 <tr>
                     <th scope="col"></th>
@@ -18,13 +18,13 @@
             <tbody>
                 <tr th:fragment="${activeUser}">
                     <td scope="row"></td>
-                    <td scope="row" th:text="${activeUser.email}">
+                    <td scope="row">
                         {{ activeUser.email }}
                     </td>
-                    <td scope="row" th:text="${activeUser.name}">
+                    <td scope="row">
                         {{ activeUser.nombre }}
                     </td>
-                    <td scope="row" th:text="${activeUser.lastName}">
+                    <td scope="row">
                         {{ activeUser.apellidos }}
                     </td>
                 </tr>
@@ -33,13 +33,13 @@
                     <td scope="row">
                         <input type = "checkbox" name="user" class = "chkUser" id = "chkUser" value = {{ user.email }}>
                     </td>
-                    <td scope="row" th:text="${user.email}">
+                    <td scope="row">
                         {{ user.email }}
                     </td>
-                    <td scope="row" th:text="${user.name}">
+                    <td scope="row">
                         {{ user.nombre }}
                     </td>
-                    <td scope="row" th:text="${user.lastName}">
+                    <td scope="row">
                         {{ user.apellidos }}
                     </td>
                 </tr>

@@ -116,7 +116,7 @@ module.exports = function (app, usersRepository) {
                     "&messageType=alert-danger ");
             } else {
                 req.session.user = user.email;
-                if(user.admin){
+                if (user.admin) {
                     res.redirect("/admin/users");
                 } else {
                     res.redirect("/users/home");
@@ -132,6 +132,8 @@ module.exports = function (app, usersRepository) {
 
     app.get('/users/logout', function (req, res) {
         req.session.user = null;
-        res.send("El usuario se ha desconectado correctamente");
+        res.redirect("/users/login" +
+            "?message=Usuario desconectado" +
+            "&messageType=alert-info ");
     });
 }
