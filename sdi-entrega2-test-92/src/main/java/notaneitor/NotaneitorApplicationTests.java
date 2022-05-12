@@ -7,7 +7,6 @@ import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.springframework.boot.test.context.SpringBootTest;
 
 
 import java.util.ArrayList;
@@ -63,7 +62,7 @@ class NotaneitorApplicationTests {
         mongo.deleteFriendship("user11@email.com","user09@email.com");
 
         //Cerramos el navegador al finalizar las pruebas
-        //driver.quit();
+        driver.quit();
         mongo.closeClient();
     }
 
@@ -222,6 +221,7 @@ class NotaneitorApplicationTests {
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
         //Rellenamos el formulario
         PO_LoginView.fillLoginForm(driver, "user01@email.com", "user01");
+        SeleniumUtils.waitLoadElementsBy(driver, "text", checkText,  PO_View.getTimeout());
         //Se comprueba que aparece la opción de desconectarse
         List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, result.get(0).getText());
@@ -695,75 +695,33 @@ class NotaneitorApplicationTests {
 
     }
 
+    //PR33. Inicio de sesión con datos válidos
     @Test
     @Order(33)
-    public void PR33() {
+    void PR32() {
         //Vamos al formulario de logueo.
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
-        // Conexiones erronea
-        PO_LoginView.fillLoginForm(driver, "admi@email.com", "admin");
-        PO_LoginView.fillLoginForm(driver, "admin@email.com", "dmin");
-
-        // REGISTRO DE USUARIOS NUEVOS
-        //Vamos al formulario de registro
-        PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
-        //Rellenamos el formulario.
-        PO_SignUpView.fillForm(driver, "prueba1", "Josefo", "Perez", "77777", "77777");
-        //Logout
-        PO_HomeView.clickOption(driver, "logout", "class", "btn btn-primary");
-
-        //Vamos al formulario de registro
-        PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
-        //Rellenamos el formulario.
-        PO_SignUpView.fillForm(driver, "prueba2", "Antonio", "Perez", "123456", "123456");
-        //Logout
-        PO_HomeView.clickOption(driver, "logout", "class", "btn btn-primary");
-
-        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
-        //Conexion exitosa
-        PO_LoginView.fillLoginForm(driver, "admin@email.com", "admin");
-        //Logout
-        PO_HomeView.clickOption(driver, "logout", "class", "btn btn-primary");
-
-        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
-
-        PO_LoginView.fillLoginForm(driver, "admin@email.com", "admin");
-
-        PO_NavView.adminDropdown(driver, "btnViewLogs");
-
-        //Comprobamos las cantidades de los logs que salen de cada tipo
-        PO_Logs.checkAtLeastLogType(driver,"PET",2);
-        PO_Logs.checkAtLeastLogType(driver,"ALTA",2);
-        PO_Logs.checkAtLeastLogType(driver,"LOGIN-EX",2);
-        PO_Logs.checkAtLeastLogType(driver,"LOGIN-ERR",2);
-        PO_Logs.checkAtLeastLogType(driver,"LOGOUT",3);
-
+        //Rellenamos el formulario
+        PO_LoginView.fillLoginForm(driver, "user01@email.com", "user01");
+        //Comprobamos que podemos ver sus chats
+        String checkText = "Chats";
+        List<WebElement> result = PO_View.checkElementBy(driver, "id", "friends");
+        Assertions.assertEquals(checkText, result.get(0).getText());
     }
 
-    // Estando autenticado como usuario administrador, ir a visualización de logs, pulsar el
-    // botón/enlace borrar logs y comprobar que se eliminan los logs de la base de datos.
+    //PR34. Inicio de sesión con datos inválidos (usuario no existente en la aplicación).
     @Test
     @Order(34)
-    public void PR34() {
+    void PR33() {
         //Vamos al formulario de logueo.
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
-        //Rellenamos el formulario como un usuario estandar
-        PO_LoginView.fillLoginForm(driver, "admin@email.com", "admin");
-        //Comprobamos que puede ver los usuarios
-        String checkText = "Usuarios";
-        List<WebElement> result = PO_View.checkElementBy(driver, "id", "idTitleAdminListUser");
+        //Rellenamos el formulario
+        PO_LoginView.fillLoginForm(driver, "random@email.com", "12345");
+        //Comprobamos que se muestra la alerta
+        String checkText = "Usuario no encontrado";
+        SeleniumUtils.waitLoadElementsBy(driver, "text", checkText,  PO_View.getTimeout());
+        List<WebElement> result = PO_View.checkElementBy(driver, "class", "alert alert-danger");
         Assertions.assertEquals(checkText, result.get(0).getText());
-        PO_NavView.adminDropdown(driver,"btnViewLogs");
-        //Comprobamos que al menos hay 1 login exitoso (ya que nos logeamos como admin)
-        PO_Logs.checkAtLeastLogType(driver,"LOGIN-EX",1);
-        PO_NavView.adminDropdown(driver,"btnViewLogs");
-        PO_AdminUsersListView.clickBtn(driver);
-        //Comprobamos que ahora ya no hay ninguno de ningun tipo
-        PO_Logs.checkLogType(driver,"PET",2);
-        PO_Logs.checkLogType(driver,"ALTA",0);
-        PO_Logs.checkLogType(driver,"LOGIN-EX",0);
-        PO_Logs.checkLogType(driver,"LOGIN-ERR",0);
-        PO_Logs.checkLogType(driver,"LOGOUT",0);
     }
 
 }
