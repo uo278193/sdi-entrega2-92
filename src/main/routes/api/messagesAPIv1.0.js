@@ -106,43 +106,55 @@ module.exports = function (app, usersRepository, messagesRepository) {
         }
     });
 
-    app.get("/api/v1.0/user/messages/:id", function (req, res) {
+    app.get("/api/v1.0/user/:id/messages", function (req, res) {
         try {
             let userEmail = res.user.email;
             let options = {};
-            let friendEmail = usersRepository.findUser({_id: ObjectId(req.params.id)}, options).email;
-            let filter = {receptor: userEmail, emisor: friendEmail};
-            messagesRepository.getMessages(filter, options).then(messages => {
-                if (messages == null) {
-                    res.status(404);
-                    res.json({error: "ID inválido o no existe"})
-                } else {
-                    res.status(200);
+            usersRepository.findUser({_id: ObjectId(req.params.id)}, options).then(user2=>{
+                friendEmail=user2.email
+                usersRepository.findUser({"email": userEmail}, options).then(user1=> {
                     let filter = {receptor: userEmail, emisor: friendEmail};
-                    messagesRepository.getMessages(filter, options).then(messages2 => {
-                        if (messages2 == null) {
+                    messagesRepository.getMessages(filter, options).then(messages => {
+                        if (messages == null) {
                             res.status(404);
                             res.json({error: "ID inválido o no existe"})
                         } else {
                             res.status(200);
-                            let response={"mensajesEmisor":messages,"mensajesReceptor":messages2}
+                            let filter = {emisor: userEmail, receptor: friendEmail};
+                            messagesRepository.getMessages(filter, options).then(messages2 => {
+                                if (messages2 == null) {
+                                    res.status(404);
+                                    res.json({error: "ID inválido o no existe"})
+                                } else {
+                                    res.status(200);
+                                    mensajesTotal=[]
+                                    messages.forEach(mensajes1=>{
+                                        mensajesTotal.push(mensajes1)
+                                    })
+                                    messages2.forEach(mensajes2=>{
+                                        mensajesTotal.push(mensajes2)
+                                    })
+                                    res.json({messages: mensajesTotal})
+                                }
+                            })
                         }
                     }).catch(error => {
+                        console.log("llega2")
                         res.status(500);
                         res.json({error: "Se ha producido un error al recuperar el mensaje."})
                     });
-                    res.json({messages: response})
-                }
-            }).catch(error => {
-                console.log("llega2")
+                }).catch (error => {
+                    res.status(500);
+                    res.json({error: "Se ha producido un error buscando al usuario :" + e})
+                })
+            }).catch (error => {
                 res.status(500);
-                res.json({error: "Se ha producido un error al recuperar el mensaje."})
-            });
-        } catch (e) {
-            console.log("llega3")
+                res.json({error: "Se ha producido un error buscando al amigo :" + e})
+            })
+        }catch(e) {
             res.status(500);
-            res.json({error: "Se ha producido un error :" + e})
-        }
+            res.json({error: "Se ha producido un error recuperando los mensajes" + e})
+        };
     });
 
     app.put('/api/v1.0/messages/:id', function (req, res) {
