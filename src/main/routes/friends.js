@@ -21,8 +21,8 @@ module.exports = function (app, usersRepository) {
 
                 })
             }
-            let lastPage = friends.length / 4;
-            if (friends.length % 4 > 0) { // Sobran decimales
+            let lastPage = friends.length / 5;
+            if (friends.length % 5 > 0) { // Sobran decimales
                 lastPage = lastPage + 1;
             }
             let pages = []; // paginas mostrar
@@ -62,8 +62,8 @@ module.exports = function (app, usersRepository) {
 
                 })
             }
-            let lastPage = friendRequests.length / 4;
-            if (friendRequests.length % 4 > 0) { // Sobran decimales
+            let lastPage = friendRequests.length / 5;
+            if (friendRequests.length % 5 > 0) { // Sobran decimales
                 lastPage = lastPage + 1;
             }
             let pages = []; // paginas mostrar
@@ -146,7 +146,7 @@ module.exports = function (app, usersRepository) {
                                 }
                             }
                             usersRepository.updateUser(user2, filter2, options)
-                            res.redirect('/users/list')
+                            res.redirect('/user/friendRequests')
                         }
                     }
                 )
@@ -171,11 +171,11 @@ module.exports = function (app, usersRepository) {
                     if (userInSession._id.toString() === req.params.id) {
                         esUsuario = true;
                     }
-                    user.friendRequests.forEach(friendRequest => {
-                        if (friendRequest.toString() === userInSession._id.toString()) {
+                    for (var i = 0; i < user.friendRequests.length; i++) {
+                        if (user.friendRequests[i].toString() == userInSession._id.toString()) {
                             duplicado = true;
                         }
-                    })
+                    }
                     if (duplicado) {
                         res.redirect("/users/list" +
                             "?message=Una petición de amistad ya había sido enviada" +

@@ -27,8 +27,8 @@ module.exports = function (app, usersRepository) {
                 page = 1;
             }
             usersRepository.getUsers(filter, options, page).then(result => {
-                let lastPage = result.total / 4;
-                if (result.total % 4 > 0) { // Sobran decimales
+                let lastPage = result.total / 5;
+                if (result.total % 5 > 0) { // Sobran decimales
                     lastPage = lastPage + 1;
                 }
                 let pages = []; // paginas mostrar
@@ -59,8 +59,19 @@ module.exports = function (app, usersRepository) {
         let passwd2 = req.body.password2;
         if (passwd !== passwd2) {
             res.redirect("/users/signup" +
-                "?message=Las constraseñas no coinciden" +
+                "?message=Las contraseñas no coinciden" +
                 "&messageType=alert-danger");
+            return;
+        }
+        let filter = {
+            email: req.body.email
+        }
+        let options={}
+        if (usersRepository.findUser(filter,options) != null) {
+            res.redirect("/users/signup" +
+                "?message=Este email ya está en uso" +
+                "&messageType=alert-danger");
+            return;
         }
         let securePassword = app.get("crypto").createHmac('sha256', app.get('clave'))
             .update(req.body.password).digest('hex');

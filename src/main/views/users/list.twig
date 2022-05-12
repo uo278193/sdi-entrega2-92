@@ -1,12 +1,12 @@
 {% extends "layout.twig" %}
-{% block title %} Sditagram {% endblock %}
+{% block title %} SDIGRAM {% endblock %}
 {% block main_container %}
     <!-- Búsqueda -->
     <div class="row">
         <div id="custom-search-input ">
             <form method="get" action="/users/list">
                 <div class="input-group col-xs-8 col-sm-6 col-md-4 col-lg-5 pull-right">
-                    <input id="search" type="text" class="search-query form-control"
+                    <input id="searchText" type="text" class="search-query form-control"
                            placeholder="Nombre de usuario" name="search"/>
                     <span class="input-group-btn">
                 <button class="btn" type="submit">
@@ -36,7 +36,7 @@
                     <td scope="row">{{ user.email }}</td>
                     <td scope="row">{{ user.nombre }}</td>
                     <td scope="row">{{ user.apellidos }}</td>
-                    <td scope="row">
+
                         {% set mostrarBoton=true%}
                         {% for id in user.friends %}
                              {% if(id==userInSessionId) %}
@@ -50,9 +50,11 @@
                             {% endif %}
                         {% endfor %}
                         {% if mostrarBoton==true %}
+                        <td scope="row">
                              <form action={{'/user/sendFriendRequest/'~user._id}} method="post">
                                 <input type="submit" class="btn btn-primary btnSendFR" value="Enviar petición de amistad" >
                              </form>
+                         </td>
                         {% endif %}
                    </td>
                </tr>
