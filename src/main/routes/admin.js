@@ -50,9 +50,16 @@ module.exports = function (app, usersRepository) {
                     }
                 }
             }
-           // else {res.redirect("/admin/users"+ "?message=No se han seleccionado usuarios para el borrado." +
-             //   "&messageType=alert-info");}
-            res.redirect("/admin/users");
+            /**
+            else{
+                res.redirect("/admin/users"+
+                    "?message=No se han seleccionado usuarios para el borrado" +
+                    "&messageType=alert-info ");
+            }
+             **/
+            res.redirect("/admin/users"+
+                "?message=Usuarios borrados correctamente" +
+                "&messageType=alert-info ");
         });
     });
 
