@@ -75,6 +75,17 @@ module.exports = {
         } catch (error) {
             throw (error);
         }
-    }
+    },
+    getUsersSinPag: async function (filter, options) {
+        try {
+            const client = await this.mongoClient.connect(this.app.get('connectionStrings'));
+            const database = client.db("sdistagram");
+            const collectionName = 'users';
+            const usersCollection = database.collection(collectionName);
+            return await postsCollection.find(filter, options).toArray();
+        } catch (error) {
+            throw (error);
+        }
+    },
 
 };
