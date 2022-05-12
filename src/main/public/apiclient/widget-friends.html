@@ -12,7 +12,7 @@
 <script>
     window.history.pushState("", "", "/apiclient/client.html?w=friends");
     var friends;
-    var messages;
+    let messages;
     var selectedFriendId;
 
     // var interval = 1000;  // 1000 = 1 second
@@ -42,37 +42,25 @@
     // setTimeout(loadFriends, interval);
 
     function updateFriendsTable(friends) {
-
         $("#friendsTableBody").empty(); // Vaciar la tabla
-        friends.forEach(friend => {
-            getMessages(friend._id);
-            if(messages.length > 0){
-                let text = messages[messages.length - 1].texto;
-                $("#friendsTableBody").append(
-                    "<tr id=" + friends[i].nombre + ">" +
-                    "<td>" + friends[i].nombre + "</td>" +
-                    "<td>" + friends[i].apellidos + "</td>" +
-                    "<td><a onclick=messagesDetail('" + friend._id + "')></a>" + text + "</td>" +
-                    "</tr>")
-            } else if (messages.length == 0){
-                let text = messages[0].texto;
-                $("#friendsTableBody").append(
-                    "<tr id=" + friend.nombre + ">" +
-                    "<td>" + friend.nombre + "</td>" +
-                    "<td>" + friend.apellidos + "</td>" +
-                    "<td><a onclick=messagesDetail('" + friend._id + "')></a>" + text + "</td>" +
-                    "</tr>")
-            } else {
-                $("#friendsTableBody").append(
-                    "<tr id=" + friend._id + ">" +
-                    "<td>" + friend.nombre + "</td>" +
-                    "<td>" + friend.apellidos + "</td>" +
-                    "</tr>")
-            }
-        })
+        for (var i=0;i<friends.length;i++){
+            getMessages(friends[i]._id).done(function (aux){
+                console.log(aux)
+            });
+            console.log("a")
+            console.log(messages)
+            console.log("hola")
+            $("#friendsTableBody").append(
+                "<tr id=" + friends[i].nombre + ">" +
+                "<td>" + friends[i].nombre + "</td>" +
+                "<td>" + friends[i].apellidos + "</td>" +
+                "<td><a onclick=messagesDetail('" + friends[i]._id + "')></a><br>" + messages[0].texto + "</td>" +
+                "</tr>");
+        }
+
     }
 
-    function getMessages(id) {
+     function getMessages(id) {
         $.ajax({
             url: URLbase + "/user/messages/" + id,
             type: "GET",
@@ -81,7 +69,7 @@
             headers: {"token": token},
             success: function (response) {
                 messages = response.messages;
-
+                return messages
             },
             error: function (error) {
                 $("#main-container").load("widget-login.html");
