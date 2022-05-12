@@ -106,9 +106,9 @@ module.exports = function (app, usersRepository, messagesRepository) {
         }
     });
 
-    app.get("/api/v1.0/user/:id/messages", function (req, res) {
+    app.get("/api/v1.0/user/messages/:id", function (req, res) {
         try {
-            let userEmail = res.user.email;
+            let userEmail = req.session.user;
             let options = {};
             usersRepository.findUser({_id: ObjectId(req.params.id)}, options).then(user2=>{
                 friendEmail=user2.email
@@ -126,6 +126,7 @@ module.exports = function (app, usersRepository, messagesRepository) {
                                     res.status(404);
                                     res.json({error: "ID inválido o no existe"})
                                 } else {
+
                                     res.status(200);
                                     mensajesTotal=[]
                                     messages.forEach(mensajes1=>{
@@ -134,6 +135,7 @@ module.exports = function (app, usersRepository, messagesRepository) {
                                     messages2.forEach(mensajes2=>{
                                         mensajesTotal.push(mensajes2)
                                     })
+                                    console.log(mensajesTotal)
                                     res.json({messages: mensajesTotal})
                                 }
                             })
@@ -144,14 +146,17 @@ module.exports = function (app, usersRepository, messagesRepository) {
                         res.json({error: "Se ha producido un error al recuperar el mensaje."})
                     });
                 }).catch (error => {
+                    console.log("llega1")
                     res.status(500);
                     res.json({error: "Se ha producido un error buscando al usuario :" + e})
                 })
             }).catch (error => {
+                console.log("llega3")
                 res.status(500);
                 res.json({error: "Se ha producido un error buscando al amigo :" + e})
             })
         }catch(e) {
+            console.log("llega4")
             res.status(500);
             res.json({error: "Se ha producido un error recuperando los mensajes" + e})
         };

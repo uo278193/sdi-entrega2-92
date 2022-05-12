@@ -36,45 +36,40 @@
             }
         });
         // ordenar por fecha del último mensaje (de mayor a menor)
-
     }
 
     // setTimeout(loadFriends, interval);
 
     function updateFriendsTable(friends) {
+        console.log(friends)
+        let aux;
         $("#friendsTableBody").empty(); // Vaciar la tabla
         for (var i=0;i<friends.length;i++){
-            getMessages(friends[i]._id).done(function (aux){
-                console.log(aux)
+            aux=friends[i]
+            $.ajax({
+                url: URLbase + "/user/messages/" + friends[i]._id,
+                type: "GET",
+                data: {},
+                dataType: 'json',
+                headers: {"token": token},
+                success: function (response) {
+                    messages = response.messages;
+                    $("#friendsTableBody").append(
+                        "<tr id=" + aux.nombre + ">" +
+                        "<td>" + aux.nombre + "</td>" +
+                        "<td>" + aux.apellidos + "</td>" +
+                        "<td><a onclick=messagesDetail('" + aux._id + "')>ver </a>" + messages[0].texto + "</td>" +
+                        "</tr>");
+                },
+                error: function (error) {
+                    $("#main-container").load("widget-login.html");
+                }
             });
-            console.log("a")
-            console.log(messages)
-            console.log("hola")
-            $("#friendsTableBody").append(
-                "<tr id=" + friends[i].nombre + ">" +
-                "<td>" + friends[i].nombre + "</td>" +
-                "<td>" + friends[i].apellidos + "</td>" +
-                "<td><a onclick=messagesDetail('" + friends[i]._id + "')></a><br>" + messages[0].texto + "</td>" +
-                "</tr>");
         }
-
     }
 
      function getMessages(id) {
-        $.ajax({
-            url: URLbase + "/user/messages/" + id,
-            type: "GET",
-            data: {},
-            dataType: 'json',
-            headers: {"token": token},
-            success: function (response) {
-                messages = response.messages;
-                return messages
-            },
-            error: function (error) {
-                $("#main-container").load("widget-login.html");
-            }
-        });
+
         // ordenar por fecha del último mensaje (de menor a mayor)
         // messages.sort(function (a, b) {
         //     if (a.time > b.time) return 1;
