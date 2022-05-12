@@ -19,8 +19,8 @@ public class PO_PrivateView extends PO_NavView {
         driver.findElements(By.className("btnSendFR")).get(position).click();
     }
 
-    static public void goToNextPage(WebDriver driver){
-        List<WebElement> elements = checkElementBy(driver,"free","//li[contains(@id,'pag')]/a");
+    static public void goToNextPage(WebDriver driver,String page){
+        List<WebElement> elements = checkElementBy(driver,"free","//li[contains(@id,'pi-" + page + "')]/a");
         elements.get(0).click();
     }
 }

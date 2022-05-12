@@ -31,4 +31,5 @@ public class PO_HomeView extends PO_NavView {
         //Esperamos a que se cargue el saludo de bienvenida en Español
         PO_HomeView.checkWelcomeToPage(driver, locale1);
     }
+
 }

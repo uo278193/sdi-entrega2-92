@@ -61,16 +61,13 @@ app.use("/users/list",userSessionRouter);
 app.use("/messages/edit", userAuthorRouter);
 app.use("/messages/delete", userAuthorRouter);
 
-const userTokenRouter = require('./routes/userTokenRouter'); // habrá que cambiarlo
+const userTokenRouter = require('./routes/userTokenRouter');
 app.use("/api/v1.0/sdigram/", userTokenRouter);
-
-const userAudiosRouter = require('./routes/userAudiosRouter');
 
 app.use("/messages/add", userSessionRouter);
 app.use("/posts/add", userSessionRouter);
 app.use("/posts/myPosts", userSessionRouter);
 app.use("/publications", userSessionRouter);
-app.use("/audios/", userAudiosRouter);
 app.use("/feed/", userSessionRouter);
 app.use("/users/home",userSessionRouter);
 
@@ -91,9 +88,8 @@ require("./routes/comments.js")(app, commentsRepository);
 require("./routes/posts.js")(app, postsRepository,usersRepository);
 require("./routes/authors.js")(app);
 
-//require("./routes/posts.js")(app, postsRepository, commentsRepository);
 require("./routes/friends.js")(app,usersRepository);
-// cambiar
+
 require("./routes/api/messagesAPIv1.0.js")(app, usersRepository, messagesRepository);
 
 // view engine setup

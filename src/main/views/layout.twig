@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>{% block title %} Sdistagram {% endblock %}</title>
+    <title>{% block title %} SDIGRAM {% endblock %}</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link rel="stylesheet"
@@ -23,35 +23,39 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
-                <li id="myshop" class="active"><a href="/inicio">Inicio</a></li>
+                <li id="inicio" class="active"><a href="/users/home">Inicio</a></li>
                 <li id="myPosts"><a href="/posts/myPosts">Posts</a></li>
-                <li id="addPosts"><a href="/posts/add"> Add Posts</a></li>
-                <li id="mybuy"><a href="/users/list">Usuarios</a></li>
+                <li id="addPosts"><a href="/posts/add">Añadir Post</a></li>
+                <li id="users"><a href="/users/list">Usuarios</a></li>
                 <li id="friendRequests"><a href="/user/friendRequests">Peticiones de amistad</a></li>
                 <li id="friends"><a href="/user/friends">Amigos</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="/users/signup"><span class="glyphicon glyphicon-user"></span> Registrate</a></li>
-                <li><a href="/users/login"><span class="glyphicon glyphicon-log-in"></span> Identifícate</a></li>
+                <li><a href="/users/signup"><span class="glyphicon glyphicon-user"></span>Regístrate</a></li>
+                {% if user == null %}
+                    <li><a href="/users/login"><span class="glyphicon glyphicon-log-in"></span>Identifícate</a></li>
+                {% else %}
+                    <li><a href="/users/logout"><span class="glyphicon glyphicon-log-out"></span>Cerrar sesión</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>
 </nav>
 {% block body %}
-        <div class="container">
-            <script> let params = new URLSearchParams(location.search);
-                let message = params.get("message");
-                let messageType = params.get("messageType");
-                if (message != null && message != "") {
-                    if (messageType == "") {
-                        messageType = 'alert-info';
-                    }
-                    $(".container")
-                        .append("<div class='alert " + messageType + "'>" + message + " </div>");
-                } </script>
-            <!-- Contenido --> {% block main_container %} <!-- Posible contenido por defecto -->
-            {% endblock %}
-        </div>
+    <div class="container">
+        <script> let params = new URLSearchParams(location.search);
+            let message = params.get("message");
+            let messageType = params.get("messageType");
+            if (message != null && message != "") {
+                if (messageType == "") {
+                    messageType = 'alert-info';
+                }
+                $(".container")
+                    .append("<div class='alert " + messageType + "'>" + message + " </div>");
+            } </script>
+        <!-- Contenido --> {% block main_container %} <!-- Posible contenido por defecto -->
+        {% endblock %}
+    </div>
 {% endblock %}
 </body>
 </html>

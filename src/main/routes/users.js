@@ -1,52 +1,70 @@
 module.exports = function (app, usersRepository) {
     app.get('/users/home', function (req, res) {
-        let response = {
-            user: req.session.user
-        }
-        res.render('users/home.twig', response);
+        let filter1 = {email : req.session.user};
+        usersRepository.findUser(filter1, {}).then(activeUser => {
+            if (activeUser == null) {
+                res.redirect("/users/login" +
+                    "?message=no se ha iniciado sesión" +
+                    "&messageType=alert-danger ");
+            } else {
+                let response = {
+                    user: req.session.user
+                }
+                res.render('users/home.twig', response);
+            }
+        });
     });
     app.get('/users/list', function (req, res) {
-        let filter = {"email": req.session.user};
-        let options = {};
-        usersRepository.findUser(filter, options).then(userInSession => {
-            filter = {"admin": false, "email": {$ne: req.session.user}};
-            if (req.query.search != null && (req.query.search) !== "undefined" && req.query.search !== "") {
-                filter = {
-                    "admin": false,
-                    "email": {$ne: req.session.user},
-                    $or: [
-                        {"email": {$regex: ".*" + req.query.search + ".*"}},
-                        {"nombre": {$regex: ".*" + req.query.search + ".*"}},
-                        {"apellidos": {$regex: ".*" + req.query.search + ".*"}}
-                    ]
-                };
-            }
-            let page = parseInt(req.query.page); // Es String !!!
-            if (typeof req.query.page === "undefined" || req.query.page === null || req.query.page === "0") {
-
-                page = 1;
-            }
-            usersRepository.getUsers(filter, options, page).then(result => {
-                let lastPage = result.total / 4;
-                if (result.total % 4 > 0) { // Sobran decimales
-                    lastPage = lastPage + 1;
-                }
-                let pages = []; // paginas mostrar
-                for (let i = page - 2; i <= page + 2; i++) {
-                    if (i > 0 && i <= lastPage) {
-                        pages.push(i);
+        let filter1 = {email : req.session.user};
+        usersRepository.findUser(filter1, {}).then(activeUser => {
+            if (activeUser == null) {
+                res.redirect("/users/login" +
+                    "?message=no se ha iniciado sesión" +
+                    "&messageType=alert-danger ");
+            } else {
+                let filter = {"email": req.session.user};
+                let options = {};
+                usersRepository.findUser(filter, options).then(userInSession => {
+                    filter = {"admin": false, "email": {$ne: req.session.user}};
+                    if (req.query.search != null && (req.query.search) !== "undefined" && req.query.search !== "") {
+                        filter = {
+                            "admin": false,
+                            "email": {$ne: req.session.user},
+                            $or: [
+                                {"email": {$regex: ".*" + req.query.search + ".*"}},
+                                {"nombre": {$regex: ".*" + req.query.search + ".*"}},
+                                {"apellidos": {$regex: ".*" + req.query.search + ".*"}}
+                            ]
+                        };
                     }
-                }
-                let response = {
-                    users: result.users,
-                    pages: pages,
-                    currentPage: page,
-                    userInSessionId:userInSession._id.toString()
-                }
-                res.render("users/list.twig", response);
-            })
-        }).catch(error => {
-            res.send("Se ha producido un error al listar los usuarios " + error)
+                    let page = parseInt(req.query.page); // Es String !!!
+                    if (typeof req.query.page === "undefined" || req.query.page === null || req.query.page === "0") {
+
+                        page = 1;
+                    }
+                    usersRepository.getUsers(filter, options, page).then(result => {
+                        let lastPage = result.total / 5;
+                        if (result.total % 5 > 0) { // Sobran decimales
+                            lastPage = lastPage + 1;
+                        }
+                        let pages = []; // paginas mostrar
+                        for (let i = page - 2; i <= page + 2; i++) {
+                            if (i > 0 && i <= lastPage) {
+                                pages.push(i);
+                            }
+                        }
+                        let response = {
+                            users: result.users,
+                            pages: pages,
+                            currentPage: page,
+                            userInSessionId: userInSession._id.toString()
+                        }
+                        res.render("users/list.twig", response);
+                    })
+                }).catch(error => {
+                    res.send("Se ha producido un error al listar los usuarios " + error)
+                });
+            }
         });
     });
 
@@ -59,8 +77,19 @@ module.exports = function (app, usersRepository) {
         let passwd2 = req.body.password2;
         if (passwd !== passwd2) {
             res.redirect("/users/signup" +
-                "?message=Las constraseñas no coinciden" +
+                "?message=Las contraseñas no coinciden" +
                 "&messageType=alert-danger");
+            return;
+        }
+        let filter = {
+            email: req.body.email
+        }
+        let options={}
+        if (usersRepository.findUser(filter,options) != null) {
+            res.redirect("/users/signup" +
+                "?message=Este email ya está en uso" +
+                "&messageType=alert-danger");
+            return;
         }
         let securePassword = app.get("crypto").createHmac('sha256', app.get('clave'))
             .update(req.body.password).digest('hex');
@@ -104,8 +133,9 @@ module.exports = function (app, usersRepository) {
                     "?message=Email o password incorrecto" +
                     "&messageType=alert-danger ");
             } else {
+                app.user = user.email;
                 req.session.user = user.email;
-                if(user.admin){
+                if (user.admin) {
                     res.redirect("/admin/users");
                 } else {
                     res.redirect("/users/home");
@@ -120,7 +150,10 @@ module.exports = function (app, usersRepository) {
     });
 
     app.get('/users/logout', function (req, res) {
+        app.user = null;
         req.session.user = null;
-        res.send("El usuario se ha desconectado correctamente");
+        res.redirect("/users/login" +
+            "?message=Usuario desconectado" +
+            "&messageType=alert-info ");
     });
 }
