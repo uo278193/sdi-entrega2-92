@@ -26,20 +26,33 @@
             success: function (response) {
                 friends = response.friends;
                 updateFriendsTable(friends);
+            }, complete: function (data) {
+                // Schedule the next
+                // setTimeout(loadFriends, interval);
             },
             error: function (error) {
                 $("#main-container").load("widget-login.html");
             }
         });
-
-        updateFriendsTable(friends);
+        // ordenar por fecha del último mensaje (de mayor a menor)
+        friends.sort(function () {
+        });
     }
 
     // setTimeout(loadFriends, interval);
 
     function updateFriendsTable(friends) {
+
         $("#friendsTableBody").empty(); // Vaciar la tabla
         for (let i = 0; i < friends.length; i++) {
+            $("#friendsTableBody").append(
+                "<tr id=" + friends[i].nombre + ">" +
+                "<td>" + friends[i].nombre + "</td>" +
+                "<td>" + friends[i].apellidos + "</td>"+
+
+                "</tr>")
+            /*var lastMessage = getLastMessage(friends[i].email);*/
+            /*
             getMessages(friends[i].email);
             // let text = $val(messages[messages.length -1].texto);
             $("#friendsTableBody").append(
@@ -47,6 +60,8 @@
                 "<td>" + friends[i].apellidos + "</td>" +
                 "<td><a onclick=messagesDetail('" + friends[i]._id + "')></a><br>" + messages[messages.length -1].texto + "</td>" +
                 "</tr>");
+            */
+
         }
     }
 
@@ -84,6 +99,6 @@
         selectedFriendId = _id;
         $("#main-container").load("widget-messages.html");
     }
-
+    */
     loadFriends();
 </script>

@@ -166,7 +166,6 @@ module.exports = function (app, usersRepository) {
                                         }
                                     }
                                     usersRepository.updateUser(user2, filter2, options)
-                                    res.redirect('/users/list')
                                 }
                             }
                         )
@@ -262,27 +261,8 @@ module.exports = function (app, usersRepository) {
                         let duplicado = false;
                         let esUsuario = false;
                         usersRepository.findUser(filter2, options).then(userInSession => {
-                            if (userInSession._id.toString() === req.params.id) {
-                                esUsuario = true;
-                            }
-                            user.friendRequests.forEach(friendRequest => {
-                                if (friendRequest.toString() === userInSession._id.toString()) {
-                                    duplicado = true;
-                                }
-                            })
-                            if (duplicado) {
-                                res.redirect("/users/list" +
-                                    "?message=Una petición de amistad ya había sido enviada" +
-                                    "&messageType=alert-danger");
-                            } else if (esUsuario) {
-                                res.redirect("/users/list" +
-                                    "?message=No puedes enviarte una petición de amistad a ti mismo" +
-                                    "&messageType=alert-danger");
-                            } else {
                                 user.friendRequests.push(userInSession._id);
                                 usersRepository.updateUser(user, filter, options);
-                                res.redirect("/users/list");
-                            }
                         })
                     }).catch(error => {
                         res.send("Se ha producido un error al enviar la petición de amistad " + error)
@@ -300,27 +280,9 @@ module.exports = function (app, usersRepository) {
                 let duplicado = false;
                 let esUsuario = false;
                 usersRepository.findUser(filter2, options).then(userInSession => {
-                    if (userInSession._id.toString() === req.params.id) {
-                        esUsuario = true;
-                    }
-                    for (var i = 0; i < user.friendRequests.length; i++) {
-                        if (user.friendRequests[i].toString() == userInSession._id.toString()) {
-                            duplicado = true;
-                        }
-                    }
-                    if (duplicado) {
-                        res.redirect("/users/list" +
-                            "?message=Una petición de amistad ya había sido enviada" +
-                            "&messageType=alert-danger");
-                    } else if (esUsuario) {
-                        res.redirect("/users/list" +
-                            "?message=No puedes enviarte una petición de amistad a ti mismo" +
-                            "&messageType=alert-danger");
-                    } else {
                         user.friendRequests.push(userInSession._id);
                         usersRepository.updateUser(user, filter, options);
                         res.redirect("/users/list");
-                    }
                 })
             }).catch(error => {
                 res.send("Se ha producido un error al enviar la petición de amistad " + error)

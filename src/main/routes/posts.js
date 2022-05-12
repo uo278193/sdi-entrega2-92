@@ -110,22 +110,17 @@ module.exports = function (app, postsRepository, usersRepository) {
                         } else {
                             res.render("posts/listNoFriendPost.twig", response);
                         }
-
                     }).catch(error => {
                         res.send("Se ha producido un error al listar los post de la aplicacion." + error);
                     })
-
-
                 }).catch(error => {
                     res.send("error buscando lista amigos" + error);
                 })
-
             }).catch(error => {
                 res.send("error buscando id user" + error);
-            })
-        });
+            });
+        })
     });
-
 
     app.post('/posts/add', function (req, res) {
         let filter1 = {email: req.session.user};
