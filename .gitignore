@@ -1,4 +1,6 @@
 /src/main/node_modules/
 /target/
 /lib/
+/node_modules/
+/sdi-entrega2-test-92/target/
 /package-lock.json

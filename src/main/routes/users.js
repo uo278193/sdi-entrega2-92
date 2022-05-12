@@ -40,31 +40,29 @@ module.exports = function (app, usersRepository) {
                     let page = parseInt(req.query.page); // Es String !!!
                     if (typeof req.query.page === "undefined" || req.query.page === null || req.query.page === "0") {
 
-                        page = 1;
-                    }
-                    usersRepository.getUsers(filter, options, page).then(result => {
-                        let lastPage = result.total / 4;
-                        if (result.total % 4 > 0) { // Sobran decimales
-                            lastPage = lastPage + 1;
-                        }
-                        let pages = []; // paginas mostrar
-                        for (let i = page - 2; i <= page + 2; i++) {
-                            if (i > 0 && i <= lastPage) {
-                                pages.push(i);
-                            }
-                        }
-                        let response = {
-                            users: result.users,
-                            pages: pages,
-                            currentPage: page,
-                            userInSessionId: userInSession._id.toString()
-                        }
-                        res.render("users/list.twig", response);
-                    })
-                }).catch(error => {
-                    res.send("Se ha producido un error al listar los usuarios " + error)
-                });
+                page = 1;
             }
+            usersRepository.getUsers(filter, options, page).then(result => {
+                let lastPage = result.total / 5;
+                if (result.total % 5 > 0) { // Sobran decimales
+                    lastPage = lastPage + 1;
+                }
+                let pages = []; // paginas mostrar
+                for (let i = page - 2; i <= page + 2; i++) {
+                    if (i > 0 && i <= lastPage) {
+                        pages.push(i);
+                    }
+                }
+                let response = {
+                    users: result.users,
+                    pages: pages,
+                    currentPage: page,
+                    userInSessionId:userInSession._id.toString()
+                }
+                res.render("users/list.twig", response);
+            })
+        }).catch(error => {
+            res.send("Se ha producido un error al listar los usuarios " + error)
         });
     });
 
@@ -77,8 +75,19 @@ module.exports = function (app, usersRepository) {
         let passwd2 = req.body.password2;
         if (passwd !== passwd2) {
             res.redirect("/users/signup" +
-                "?message=Las constraseñas no coinciden" +
+                "?message=Las contraseñas no coinciden" +
                 "&messageType=alert-danger");
+            return;
+        }
+        let filter = {
+            email: req.body.email
+        }
+        let options={}
+        if (usersRepository.findUser(filter,options) != null) {
+            res.redirect("/users/signup" +
+                "?message=Este email ya está en uso" +
+                "&messageType=alert-danger");
+            return;
         }
         let securePassword = app.get("crypto").createHmac('sha256', app.get('clave'))
             .update(req.body.password).digest('hex');

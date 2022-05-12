@@ -8,7 +8,7 @@ public class PO_SearchView extends PO_NavView{
 
     static public void fillForm(WebDriver driver, String txt){
 
-        WebElement text = driver.findElement(By.name("searchText"));
+        WebElement text = driver.findElement(By.id("searchText"));
         text.click();
         text.clear();
         text.sendKeys(txt);
