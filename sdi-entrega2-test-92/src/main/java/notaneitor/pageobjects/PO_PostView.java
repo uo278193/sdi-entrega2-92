@@ -10,11 +10,11 @@ import java.util.List;
 public class PO_PostView extends PO_NavView {
     static public void fillForm(WebDriver driver, String tittle,String text){
 
-        WebElement tittle1 = driver.findElement(By.name("tittle"));
+        WebElement tittle1 = driver.findElement(By.name("title"));
         tittle1.click();
         tittle1.clear();
         tittle1.sendKeys(tittle);
-        WebElement text1 = driver.findElement(By.name("text"));
+        WebElement text1 = driver.findElement(By.name("texto"));
         text1.click();
         text1.clear();
         text1.sendKeys(text);
