@@ -53,6 +53,7 @@ class NotaneitorApplicationTests {
     static public void begin() {
         mongo.borrarUsuarios();
         mongo.crearUsuarios();
+        mongo.crearPosts();
     }
 
     //Al finalizar la última prueba
@@ -169,7 +170,7 @@ class NotaneitorApplicationTests {
         //Rellenamos el formulario
         PO_LoginView.fillLoginForm(driver, "", "");
         //Comprobamos que no se ha iniciado sesión
-        String checkText = "Identificación de usuario";
+        String checkText = "Identificacion de usuario";
         List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
@@ -184,7 +185,7 @@ class NotaneitorApplicationTests {
         //Rellenamos el formulario
         PO_LoginView.fillLoginForm(driver, "user01@email.com", "22222");
         //Comprobamos que no se ha iniciado sesión
-        String checkText = "Identificación de usuario";
+        String checkText = "Identificacion de usuario";
         List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
         Assertions.assertEquals(checkText, result.get(0).getText());
     }
@@ -197,16 +198,12 @@ class NotaneitorApplicationTests {
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
         //Rellenamos el formulario
         PO_LoginView.fillLoginForm(driver, "user01@email.com", "user01");
-        //Se comprueba que ha hecho login
-        String checkText = "Usuarios";
-        List<WebElement> result = PO_View.checkElementBy(driver, "id", "idUsuariosListaUser");
-        Assertions.assertEquals(checkText, result.get(0).getText());
         //Se desconecta de la sesión
         PO_HomeView.clickOption(driver, "logout", "class", "btn btn-primary");
         //Comprobamos que se ha desconectado
-        String checkText2 = "Identifícate";
-        List<WebElement> result2 = PO_View.checkElementBy(driver, "text", checkText2);
-        Assertions.assertEquals(checkText2, result2.get(0).getText());
+        String checkText = "Identifícate";
+        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, result.get(0).getText());
     }
 
     //Comprobar que el botón cerrar sesión no está visible si el usuario no está autenticado.
