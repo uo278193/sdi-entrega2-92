@@ -1,6 +1,5 @@
 package notaneitor;
 
-
 import notaneitor.pageobjects.*;
 import notaneitor.util.MongoUtils;
 import notaneitor.util.SeleniumUtils;
@@ -23,13 +22,13 @@ class NotaneitorApplicationTests {
     // Rosa
   //  static String Geckodriver = "C:\\Users\\rosa_\\Documents\\Uni\\3º\\Segundo cuatri\\SDI\\Lab\\sesion05\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
     // David
-    static String Geckodriver = "C:\\Users\\david\\OneDrive\\Documentos\\SDI21-22\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
+    //static String Geckodriver = "C:\\Users\\david\\OneDrive\\Documentos\\SDI21-22\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
     //Mateo
 //    static String Geckodriver ="C:\\Users\\User\\Desktop\\TERCERO\\SDI\\sesion06\\PL-SDI-Sesión5-material\\geckodriver-v0.30.0-win64.exe";
     // Geckodriver María
     //static String Geckodriver = "C:\\Program Files\\geckodriver-v0.30.0-win64.exe";
     //Miguel
-    //static String Geckodriver ="C:\\Users\\migue\\OneDrive\\Documentos\\Uniovi\\Tercero segundo cuatri\\SDI\\Practica\\geckodriver-v0.30.0-win64.exe";
+    static String Geckodriver ="C:\\Users\\migue\\OneDrive\\Documentos\\Uniovi\\Tercero segundo cuatri\\SDI\\Practica\\geckodriver-v0.30.0-win64.exe";
 
     //Común a Windows y a MACOSX
     static final String URL = "http://localhost:8081";
